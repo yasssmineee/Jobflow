@@ -1,0 +1,10 @@
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_row(form.type, {
+    'label': 'Sélectionnez le type',
+    'attr': {'class': 'form-control'}
+}) }}
+    {# Autres champs de formulaire #}
+    {{ form_widget(form) }}
+    {# Bouton de soumission #}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

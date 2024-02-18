@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Opportunite index{% endblock %}
+
+{% block body %}
+    <h1>Opportunite index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Descreption</th>
+                <th>Type</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for opportunite in opportunites %}
+            <tr>
+                <td>{{ opportunite.id }}</td>
+                <td>{{ opportunite.nom }}</td>
+                <td>{{ opportunite.descreption }}</td>
+                <td>{{ opportunite.type }}</td>
+                <td>
+                    {# <a href="{{ path('app_opportunite_show', {'id': opportunite.id}) }}">show</a>
+                    <a href="{{ path('app_opportunite_edit', {'id': opportunite.id}) }}">edit</a> #}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_opportunite_new') }}">Create new</a>
+{% endblock %}
