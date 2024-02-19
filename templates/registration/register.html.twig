@@ -1,0 +1,106 @@
+
+{% extends 'base.html.twig' %}
+    {% block content %}
+    <!-- Spinner Start -->
+    <div id="spinner" class="show position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-grow text-primary" role="status"></div>
+    </div>
+    <!-- Spinner End -->
+
+    <!-- Topbar Start -->
+    <div class="container-fluid bg-dark py-2 d-none d-md-flex">
+        <div class="container">
+            <div class="d-flex justify-content-between topbar">
+                <div class="top-info">
+                    
+                    <small class="me-3 text-white-50"><a href="#"><i class="fas fa-envelope me-2 text-secondary"></i></a>JobFlow@outlook.com</small>
+                </div>
+                <div id="note" class="text-secondary d-none d-xl-flex"><small>Note : We help you make your dream</small></div>
+                <div class="top-link">
+                    <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-facebook-f text-primary"></i></a>
+                    <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-twitter text-primary"></i></a>
+                    <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-instagram text-primary"></i></a>
+                    <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle me-0"><i class="fab fa-linkedin-in text-primary"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+    
+
+    
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5">
+        <div class="container text-center py-5">
+            <h1 class="display-2 text-white mb-4 animated slideInDown">Join Us</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb justify-content-center mb-0">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item" aria-current="page">Contact</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+
+    <!-- Contact Start -->
+    <div class="container-fluid py-5 mt-5">
+        <div class="container py-5">
+            <div class="text-center mx-auto pb-5 wow fadeIn" data-wow-delay=".3s" style="max-width: 600px;">
+                <h2 class="text-primary">Registration</h2>
+               
+            </div>
+            
+        
+                    {% block body %}
+                    <div class="contact-detail position-relative p-5">
+                       
+                            
+                    <div class="row g-5 mb-5 justify-content-center">
+                        <div class="col-lg-6 wow fadeIn" data-wow-delay=".5s">
+                            <div class="p-5 rounded contact-form">
+
+
+                                {{ form_errors(registrationForm) }}
+
+                                {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'} }) }}
+
+                                <div class="mb-4">
+                                    {{ form_row(registrationForm.lastname, {'label': 'Userna','attr': {'class':
+                                    'form-control border-0 py-3', 'placeholder': 'Your Name'} }) }}
+                                </div>
+                                <div class="mb-4">
+                                    {{ form_row(registrationForm.email, {'label': 'Email','attr': {'class':
+                                    'form-control border-0 py-3', 'placeholder': 'Your Email'} }) }}
+                                </div>
+                                <div class="mb-4">
+                                    {{ form_row(registrationForm.plainPassword, {'label': 'Password','attr': {'class':
+                                    'form-control border-0 py-3', 'placeholder': 'Your Password'} }) }}
+                                </div>
+                                <div class="mb-4">
+                                    {{ form_row(registrationForm.agreeTerms, {'label': 'I agree to the terms and
+                                    conditions', 'attr': {'class': 'form-check-input'} }) }}
+                                </div>
+                                <div class="text-start">
+                                    <button class="btn bg-primary text-white py-3 px-5" type="submit">Register</button>
+                                </div>
+                                <hr>
+                                <div class="text-center">
+                                    <a class="small" href="{{ path('app_login') }}">Vous avez déjà un compte ? Connectez-vous !</a>
+                                </div>
+                                </div> </hr>
+
+                                {{ form_end(registrationForm) }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endblock %}
+
+             
+        </div> 
+    </div>
+   
+    {% endblock %}
