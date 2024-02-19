@@ -43,6 +43,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
     private ?string $lastname = null;
+      /**
+     * @var string|null
+     */
+    private $newPassword;
+
+    // Other methods...
+
+    public function getNewPassword(): ?string
+    {
+        return $this->newPassword;
+    }
+
+    public function setNewPassword(?string $newPassword): self
+    {
+        $this->newPassword = $newPassword;
+
+        return $this;
+    }
 
     public function __construct()
     {
