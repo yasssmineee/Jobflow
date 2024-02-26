@@ -1,4 +1,5 @@
 security:
+    access_denied_url: /loginad
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
@@ -17,11 +18,14 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\AppUserAuthenticator
+            custom_authenticators:
+                - App\Security\AppAdminAuthenticator
+                - App\Security\AppUserAuthenticator
+            entry_point: App\Security\AppUserAuthenticator
             logout:
                 path: app_logout
                 # where to redirect after logout
-                # target: app_any_route
+                target: app_login
 
             remember_me:
                 secret: '%kernel.secret%'
@@ -34,12 +38,16 @@ security:
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
-
+        
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+         #- { path: ^/loginad, roles: ROLE_ADMIN }
+         #- { path: ^(?!/(login|register)), roles: ROLE_USER }
+         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allow anonymous access to login page
+         - { path: ^/login_check$, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allow anonymous access to login check route
+         - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allow anonymous access to logout route
+         - { path: ^/, roles: ROLE_USER } # Default access for authenticated users
 
 when@test:
     security:

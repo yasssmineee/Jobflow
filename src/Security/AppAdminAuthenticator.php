@@ -15,31 +15,24 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
-use App\Repository\UserRepository;
-use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
-class AppUserAuthenticator extends AbstractLoginFormAuthenticator
+
+
+class AppAdminAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'app_login';
+    public const LOGIN_ROUTE = 'admin_login';
 
-    public function __construct(
-        private UrlGeneratorInterface $urlGenerator,
-        private UserRepository $userRepository // Add this line
-    ) {
+    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    {
     }
+
     public function authenticate(Request $request): Passport
     {
         $email = $request->request->get('email', '');
-        $user = $this->userRepository->findOneByEmail($email);
-    
-        if (!$user || !$user->getStatus()) {
-            // Redirect the user to an error page indicating that their account is disabled
-            throw new CustomUserMessageAuthenticationException('Your account is disabled');
-        }
-    
+
         $request->getSession()->set(Security::LAST_USERNAME, $email);
-    
+
         return new Passport(
             new UserBadge($email),
             new PasswordCredentials($request->request->get('password', '')),
@@ -55,14 +48,12 @@ class AppUserAuthenticator extends AbstractLoginFormAuthenticator
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
-        
-        
 
         // For example:
-        return new RedirectResponse($this->urlGenerator->generate('app_home1'));
+        return new RedirectResponse($this->urlGenerator->generate('admin'));
         //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
-
+    
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);

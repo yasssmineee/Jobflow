@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Entity;
 
 
@@ -17,6 +18,7 @@ use Symfony\Component\Mime\Message;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
 
+    const ROLE_ADMIN = 'ROLE_ADMIN';
     #[ORM\Id()]
     #[ORM\GeneratedValue()]
     #[ORM\Column(type: 'integer')]
@@ -25,8 +27,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "email ne doit pas etre vide ")]
-    #[Assert\Email(message: "the email '{{value}}' is not a valid email ")]
+    #[Assert\NotBlank(message: "Please enter your email ")]
+    #[Assert\Email(message: "this is not a valid email ")]
 
     private $email;
 
@@ -36,20 +38,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
     #[ORM\Column(length: 255)]
+
     #[Assert\Length(min: 6, minMessage: "Your password must be at least {{ limit }} characters.")]
     private $password;
 
     #[ORM\Column(length: 255)]
-
-
+    #[Assert\NotBlank(message: "Please enter your name ")]
     private ?string $lastname = null;
-      /**
+    /**
      * @var string|null
      */
     private $newPassword;
 
-    // Other methods...
+   
 
+
+    #[ORM\Column(type: "boolean")]
+    private $status;
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
     public function getNewPassword(): ?string
     {
         return $this->newPassword;
@@ -66,6 +83,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // Ensure that each new user always has the ROLE_USER role by default
         $this->roles = ['ROLE_USER'];
+        $this->status = true;
     }
 
 
@@ -85,7 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-
+   
 
     public function getRoles(): array
     {
@@ -134,6 +152,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+   
+
     public function getSalt()
     {
         // Not needed when using bcrypt or argon2i
@@ -161,5 +181,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+   
 }
-?>
