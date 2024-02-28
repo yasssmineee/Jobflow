@@ -5,36 +5,128 @@
 {% block body %}
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .card { margin-bottom: 20px; }
-    .card-img-top { max-width: 50%; height: 50%; }
+    .card-img-top { 
+        max-width: 90%; /* La largeur maximale de l'image sera de 90% de la largeur de son conteneur */
+        max-height: 600px; /* La hauteur maximale de l'image sera de 600 pixels */   
+    }
 </style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Incluez jQuery si ce n'est pas déjà fait -->
 
+    <script>
+        $(document).ready(function() {
+            $('#search').on('input', function() {
+                var searchTerm = $(this).val();
+                $.ajax({
+                    url: '{{ path('app_rechercher_evenement') }}',
+                    type: 'GET',
+                    data: {q: searchTerm},
+                    success: function(data) {
+                        $('.example-wrapper').html(''); // Effacez le contenu existant
+                        if (data.length > 0) {
+                            $.each(data, function(index, evenement) {
+                                var cardHtml = `
+                                    <div class="card mb-3">
+                                        <div class="card-header">${evenement.titre}</div>
+                                        <div class="card-body">
+                                            <p class="card-text"><strong>Localisation:</strong> ${evenement.localisation}</p>
+                                            <p class="card-text"><strong>Date:</strong> ${evenement.date}</p>
+                                            <p class="card-text"><strong>Heure:</strong> ${evenement.heure}</p>
+                                            <p class="card-text"><strong>Nbparticipant:</strong> ${evenement.nbparticipant}</p>
+                                            <p class="card-text"><strong>Image:</strong></p>
+                                            <img src="{{ asset('uploads/') }}${evenement.image}" class="card-img-top" alt="Event Image">
+                                        </div>
+                                        <div class="card-footer">
+                                            <a href="{{ path('app_supp_evenement', {'id': evenement.id}) }}" class="btn btn-danger">Supprimer</a>
+                                            <a href="{{ path('app_modifier_evenement', {'id': evenement.id}) }}" class="btn btn-primary">Modifier</a>
+                                        </div>
+                                        <div class="card-footer">
+                                            <img src="{{ qrCodes[evenement.id] }}" alt="QR Code for ${evenement.titre}">
+                                        </div>
+                                    </div>
+                                `;
+                                $('.example-wrapper').append(cardHtml);
+                            });
+                        } else {
+                            $('.example-wrapper').html('<p>Aucun résultat trouvé.</p>');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
+
+
+<div class="d-flex justify-content-center mb-4"> 
+    <form action="{{ path('app_rechercher_evenement') }}" method="get">
+        <div class="input-group">
+            <input type="text" class="form-control" id="search" name="q" value="{{ searchTerm is defined ? searchTerm : '' }}" placeholder="Rechercher par titre" style="max-width: 300px;">
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+        </div>
+    </form>
+</div>
 <div class="example-wrapper">
-    {% for evenement in e %}
-    <div class="card">
-        <div class="card-header">
-            {{ evenement.titre }}
-        </div>
-        <div class="card-body">
-            <p class="card-text"><strong>Localisation:</strong> {{ evenement.localisation }}</p>
-            <p class="card-text"><strong>Date:</strong> {{ evenement.date|date('Y-m-d') }}</p>
-            <p class="card-text"><strong>Heure:</strong> {{ evenement.heure|date('H:i:s') }}</p>
-            <p class="card-text"><strong>Nbparticipant:</strong> {{ evenement.nbparticipant }}</p>
-            <p class="card-text"><strong>Image:</strong></p>
-            {% if evenement.image %}
-                <img src="{{ asset('uploads/' ~ evenement.image) }}" class="card-img-top" alt="Event Image">
-            {% else %}
-                <p>No image available</p>
-            {% endif %}
-            
-            
-        </div>
-    </div>
-    <a href="{{ path('app_supp_evenement', {'id': evenement.id}) }}" class="btn btn-danger">Supprimer</a>
-                    
-                    
-            <a href="{{ path('app_modifier_evenement', {'id': evenement.id}) }}" class="btn btn-primary">Modifier</a>
-    {% endfor %}
+    {% if searchResults is defined and searchResults is not empty %}
+        <h2>Résultats de la recherche pour "{{ searchTerm }}"</h2>
+        {% for evenement in searchResults %}
+            <!-- Le contenu pour chaque événement trouvé -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    {{ evenement.titre }}
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Localisation:</strong> {{ evenement.localisation }}</p>
+                    <p class="card-text"><strong>Date:</strong> {{ evenement.date|date('Y-m-d') }}</p>
+                    <p class="card-text"><strong>Heure:</strong> {{ evenement.heure|date('H:i:s') }}</p>
+                    <p class="card-text"><strong>Nbparticipant:</strong> {{ evenement.nbparticipant }}</p>
+                    <p class="card-text"><strong>Image:</strong></p>
+                    {% if evenement.image %}
+                        <img src="{{ asset('uploads/' ~ evenement.image) }}" class="card-img-top" alt="Event Image">
+                    {% else %}
+                        <p>No image available</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <a href="{{ path('app_supp_evenement', {'id': evenement.id}) }}" class="btn btn-danger">Supprimer</a>
+                    <a href="{{ path('app_modifier_evenement', {'id': evenement.id}) }}" class="btn btn-primary">Modifier</a>
+                </div>
+                <div class="card-footer">
+                    <img src="{{ qrCodes[evenement.id] }}" alt="QR Code for {{ evenement.titre }}">
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h2>Tous les événements</h2>
+        {% for evenement in evenements %}
+            <!-- Le contenu pour chaque événement -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    {{ evenement.titre }}
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Localisation:</strong> {{ evenement.localisation }}</p>
+                    <p class="card-text"><strong>Date:</strong> {{ evenement.date|date('Y-m-d') }}</p>
+                    <p class="card-text"><strong>Heure:</strong> {{ evenement.heure|date('H:i:s') }}</p>
+                    <p class="card-text"><strong>Nbparticipant:</strong> {{ evenement.nbparticipant }}</p>
+                    <p class="card-text"><strong>Image:</strong></p>
+                    {% if evenement.image %}
+                        <img src="{{ asset('uploads/' ~ evenement.image) }}" class="card-img-top" alt="Event Image">
+                    {% else %}
+                        <p>No image available</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <a href="{{ path('app_supp_evenement', {'id': evenement.id}) }}" class="btn btn-danger">Supprimer</a>
+                    <a href="{{ path('app_modifier_evenement', {'id': evenement.id}) }}" class="btn btn-primary">Modifier</a>
+                </div>
+                <div class="card-footer">
+                    <img src="{{ qrCodes[evenement.id] }}" alt="QR Code for {{ evenement.titre }}">
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
 </div>
 
 {% endblock %}

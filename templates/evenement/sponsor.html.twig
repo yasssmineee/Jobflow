@@ -6,33 +6,58 @@
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .table-wrapper { margin-top: 20px; }
+    .table-wrapper table { width: 100%; border-collapse: collapse; }
+    .table-wrapper th, .table-wrapper td { padding: 8px 12px; border: 1px solid #ddd; }
+.table-wrapper th {
+    background-color: #000;
+    color: #fff; /* Changer la couleur du texte en blanc */
+}
+    .table-wrapper tr:nth-child(even) { background-color: #f2f2f2; }
+    .table-wrapper tr:hover { background-color: #ddd; }
+    .btn-group { display: flex; justify-content: space-between; }
+    .btn-group a { flex: 1; text-align: center; }
 </style>
 
+<div class="d-flex justify-content-center mb-4"> 
+    <form action="{{ path('app_rechercher_sponsor') }}" method="get">
+        <div class="input-group">
+            <input type="text" class="form-control" id="search" name="q" value="{{ searchTerm is defined ? searchTerm : '' }}" placeholder="Rechercher par Nom" style="max-width: 300px;">
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+        </div>
+    </form>
+</div>
+
 <div class="example-wrapper">
-    <table class="table table-striped table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th scope="col">Nom</th>
-                <th scope="col">Type</th>
-                <th scope="col">Suppression</th>
-                <th scope="col">Modification</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for sponsor in s %}
-                <tr>
-                    <td>{{ sponsor.nom }}</td>
-                    <td>{{ sponsor.type }}</td>
-                    <td>
-                        <a href="{{ path('app_supp_sponsor', {'id': sponsor.id}) }}" class="btn btn-danger">Supprimer</a>
-                    </td>
-                    <td>
-                        <a href="{{ path('app_modifier_sponsor', {'id': sponsor.id}) }}" class="btn btn-primary">Modifier</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    {% if searchResults is defined and searchResults is not empty %}
+        <h2>Résultats de la recherche pour "{{ searchTerm }}"</h2>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Type</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sponsor in searchResults %}
+                        <tr>
+                            <td>{{ sponsor.nom }}</td>
+                            <td>{{ sponsor.type }}</td>
+                            <td class="btn-group">
+                                <a href="{{ path('app_supp_sponsor', {'id': sponsor.id}) }}" class="btn btn-danger">Supprimer</a>
+                                <a href="{{ path('app_modifier_sponsor', {'id': sponsor.id}) }}" class="btn btn-primary">Modifier</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>Aucun résultat trouvé.</p>
+    {% endif %}
 </div>
 
 {% endblock %}

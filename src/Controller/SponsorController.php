@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class SponsorController extends AbstractController
 {
@@ -73,4 +75,44 @@ public function supprimersponsor(Sponsor $sponsor, EntityManagerInterface $entit
             'form' => $form->createView(),
         ]);
     }
+    #[Route('/rechercher_sponsor', name: 'app_rechercher_sponsor')]
+public function searchSponsor(Request $request, EntityManagerInterface $entityManager): Response
+{
+    // Créer le formulaire pour la barre de recherche
+    $form = $this->createFormBuilder()
+        ->setAction($this->generateUrl('app_rechercher_sponsor'))
+        ->add('q', TextType::class, ['label' => false, 'attr' => ['placeholder' => 'Rechercher']])
+        ->add('Rechercher', SubmitType::class, ['attr' => ['class' => 'btn btn-primary']])
+        ->getForm();
+
+    // Récupérer le terme de recherche de la requête
+    $searchTerm = $request->query->get('q');
+
+    // Si un terme de recherche est fourni, effectuer la recherche par nom
+    if ($searchTerm) {
+        $searchResults = $entityManager->getRepository(Sponsor::class)->findByNom($searchTerm);
+    } else {
+        // Si aucun terme de recherche n'est fourni, afficher tous les sponsors
+        $searchResults = $entityManager->getRepository(Sponsor::class)->findAll();
+    }
+    
+    // Trie les résultats de la recherche par nom
+    $searchResults = $this->sortSponsorsByNom($searchResults);
+    
+    return $this->render('evenement/sponsor.html.twig', [
+        'form' => $form->createView(),
+        'searchResults' => $searchResults,
+        'searchTerm' => $searchTerm,
+    ]);
+}
+
+// Fonction pour trier les sponsors par nom
+private function sortSponsorsByNom($sponsors) {
+    usort($sponsors, function($a, $b) {
+        return strcmp($a->getNom(), $b->getNom());
+    });
+    return $sponsors;
+}
+
+
 }
