@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,6 +36,24 @@ class UserController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    /*#[Route('/disable', name: 'user_disable')]
+    public function disableAccount(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker): Response
+    {
+        // Check if the user is authenticated
+    
+        /** @var UserInterface|null $user *
+        // Get the current user
+        $user = $this->getUser();
+        // Disable the account
+        $user->setStatus(false);
+        $entityManager->flush();
+    
+        // Invalidate the user's session to force logout
+        $tokenStorage->setToken(null);
+        new RedirectResponse($this->generateUrl('app_logout'));
+        // Create a response that redirects to the disabled confirmation page
+        return $this->render('user/disabled_confirmation.html.twig');
+    }*/
     #[Route('/disable', name: 'user_disable')]
     public function disableAccount(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker): Response
     {
@@ -58,36 +77,32 @@ class UserController extends AbstractController
         $user->setStatus(false);
         $entityManager->flush();
     }
-
+    new RedirectResponse($this->generateUrl('app_logout'));
     // Pass the user's email to the confirmation template
     return $this->render('user/disabled_confirmation.html.twig', [
         'user_email' => $userEmail,
     ]);
     }
+
     #[Route('/enable', name: 'user_enable')]
-    public function enableAccount(Request $request): Response
-    {
-      
-        $email = $request->get('email'); // Assuming you're passing the email in the request query parameters
-        
-        $userRepository = $this->getDoctrine()->getRepository(User::class);
-        $user = $userRepository->findOneBy(['email' => $email]);
-    
-        if (!$user) {
-        
-        }
-    
-        $user->setStatus(true);
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->flush();
-    
-        // Redirect to the enabled confirmation page
-        return $this->render('user/enabled_confirmation.html.twig');
-    }
-    #[Route('/user/disabled_error', name: 'disabled_error')]
-    public function showDisabledError(): Response
-    {
-        return $this->render('user/disabled_error.html.twig');
+public function enableAccount(Request $request, EntityManagerInterface $entityManager): Response
+{
+    $email = $request->get('email');
+
+    // Assurez-vous de récupérer l'utilisateur correctement
+    $userRepository = $this->getDoctrine()->getRepository(User::class);
+    $user = $userRepository->findOneBy(['email' => $email]);
+
+    // Assurez-vous que l'utilisateur existe et que son compte est désactivé
+    if (!$user || $user->getStatus()) {
+        throw $this->createNotFoundException('User not found or account already activated.');
     }
 
+    // Réactivez le compte de l'utilisateur
+    $user->setStatus(true);
+    $entityManager->flush();
+
+    // Rediriger vers la page de confirmation avec un message de succès
+    return $this->render('user/enabled_confirmation.html.twig');
+}
 }

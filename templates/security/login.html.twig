@@ -15,14 +15,21 @@
 
 <form method="post">
     {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% if error.messageKey == 'Your account is disabled' %}
+        <div class="alert alert-danger" role="alert">
+            Your account is disabled. 
+        </div>
+    {% else %}
+        <div class="alert alert-danger">{{ error|trans({}, 'security') }}</div>
     {% endif %}
+{% endif %}
 
     {% if app.user %}
         <div class="mb-3">
             You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
         </div>
     {% endif %}
+    
 
     
     <label for="inputEmail">Email</label>

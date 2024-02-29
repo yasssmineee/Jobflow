@@ -34,8 +34,13 @@ class AppUserAuthenticator extends AbstractLoginFormAuthenticator
         $user = $this->userRepository->findOneByEmail($email);
     
         if (!$user || !$user->getStatus()) {
+            
             // Redirect the user to an error page indicating that their account is disabled
-            throw new CustomUserMessageAuthenticationException('Your account is disabled');
+           throw new CustomUserMessageAuthenticationException('Your account is disabled');
+           /* $link = $this->urlGenerator->generate('user_enable', ['user_email' => $email]);
+
+        // Throw CustomUserMessageAuthenticationException with the link
+        throw new CustomUserMessageAuthenticationException('Your account is disabled', ['link' => $link]);*/
         }
     
         $request->getSession()->set(Security::LAST_USERNAME, $email);
@@ -49,6 +54,7 @@ class AppUserAuthenticator extends AbstractLoginFormAuthenticator
             ]
         );
     }
+
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
