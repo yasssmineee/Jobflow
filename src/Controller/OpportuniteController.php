@@ -101,5 +101,23 @@ class OpportuniteController extends AbstractController
 
         return $this->redirectToRoute('app_opportunite_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/{id}/edit', name: 'app_opportunite_edit', methods: ['GET', 'POST'])]
+    public function addToFavList(Request $request, Opportunite $opportunite, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(OpportuniteType::class, $opportunite);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_opportunite_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('opportunite/edit.html.twig', [
+            'opportunite' => $opportunite,
+            'form' => $form,
+        ]);
+    }
     
 }

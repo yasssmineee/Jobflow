@@ -30,6 +30,7 @@ class Opportunite
     private ?string $nom = null;
 
 
+
     #[Assert\Regex(
         pattern: '/^[a-zA-Z]+$/',
         message: "La description doit contenir que des caractères alphabétiques."
@@ -44,6 +45,9 @@ class Opportunite
 
     #[ORM\ManyToOne (inversedBy : 'Opportunites')]
     private ?Test $idtest = null;
+
+    #[ORM\Column]
+    private ?bool $isFavorite = null;
 
     public function getId(): ?int
     {
@@ -86,7 +90,7 @@ class Opportunite
         return $this;
     }
 
-    public function getIdtest(): ?test
+    public function getIdtest(): ?Test
     {
         return $this->idtest;
 
@@ -95,6 +99,18 @@ class Opportunite
     public function setIdtest(?test $idtest): static
     {
         $this->idtest = $idtest;
+
+        return $this;
+    }
+
+    public function isIsFavorite(): ?bool
+    {
+        return $this->isFavorite;
+    }
+
+    public function setIsFavorite(bool $isFavorite): static
+    {
+        $this->isFavorite = $isFavorite;
 
         return $this;
     }

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Postuler{% endblock %}
+
+{% block body %}
+    <h1>Postuler</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ postuler.id }}</td>
+            </tr>
+            <tr>
+                <th>MotivationText</th>
+                <td>{{ postuler.motivationText }}</td>
+            </tr>
+            <tr>
+                <th>Cv</th>
+                <td>{{ postuler.cv }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ postuler.createdAt ? postuler.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ postuler.status }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_postuler_index') }}">back to list</a>
+
+    <a href="{{ path('app_postuler_edit', {'id': postuler.id}) }}">edit</a>
+
+    {{ include('postuler/_delete_form.html.twig') }}
+{% endblock %}
