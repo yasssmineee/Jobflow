@@ -80,10 +80,11 @@
                                     {{ form_row(registrationForm.plainPassword, {'label': 'Password','attr': {'class':
                                     'form-control border-0 py-3', 'placeholder': 'Your Password'} }) }}
                                 </div>
-                                <div class="mb-4">
-                                    {{ form_row(registrationForm.agreeTerms, {'label': 'I agree to the terms and
-                                    conditions', 'attr': {'class': 'form-check-input'} }) }}
+                                <div>
+                                     {{form_row(registrationForm.captcha)}}
+                                     {{form_errors(registrationForm.captcha)}}
                                 </div>
+                                
                                 <div class="text-start">
                                     <button class="btn bg-primary text-white py-3 px-5" type="submit">Register</button>
                                 </div>

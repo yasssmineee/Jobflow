@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Log in!{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
     <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
@@ -9,50 +10,64 @@
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <h3 class="text-primary">Sign In</h3>
                 </div>
-       
-{% block body %}
 
+                {% block body %}
+                <form method="post" novalidate id="login_form">
+                    {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
 
-<form method="post">
-    {% if error %}
-    {% if error.messageKey == 'Your account is disabled' %}
-        <div class="alert alert-danger" role="alert">
-            Your account is disabled. 
+                    {% if app.user %}
+                    <div class="mb-3">
+                        You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                    </div>
+                    {% endif %}
+
+                    <label for="inputEmail">Email</label>
+                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                    <label for="inputPassword">Password</label>
+                    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                    
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    <div class="checkbox mb-3">
+                        <label>
+                            <input type="checkbox" id="remember_me_checkbox"> Remember me
+                        </label>
+                    </div>
+                    <a href="{{ path('app_forgot_password_request') }}" class="forgot-password-link">Forgot Password?</a>
+
+                    <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Sign In</button>
+                    <p class="text-center mb-0">Don't have an Account? <a href="{{ '/register' }}">Sign Up</a></p>
+
+                </form>
+                {% endblock %}
+            </div>
         </div>
-    {% else %}
-        <div class="alert alert-danger">{{ error|trans({}, 'security') }}</div>
-    {% endif %}
-{% endif %}
-
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
-    {% endif %}
-    
-
-    
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
-
-    
-
-<button type="submit" class="btn btn-primary py-3 w-100 mb-4">Sign In</button>
-<p class="text-center mb-0">Don't have an Account? <a href="{{ '/register' }}">Sign Up</a></p>
-
-</form>
-
-
-{% endblock %}
-</div>
-</div>
-</div>
+    </div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var rememberMeCheckbox = document.getElementById('remember_me_checkbox');
+        var loginForm = document.getElementById('login_form');
+        var storedAuthData = window.localStorage.getItem('authData');
+
+        if (storedAuthData) {
+            var authData = JSON.parse(storedAuthData);
+            document.getElementById('inputEmail').value = authData.email;
+            document.getElementById('inputPassword').value = authData.password;
+        }
+
+        loginForm.addEventListener('submit', function () {
+            if (rememberMeCheckbox.checked) {
+                var emailInput = document.getElementById('inputEmail').value;
+                var passwordInput = document.getElementById('inputPassword').value;
+                var authData = JSON.stringify({ email: emailInput, password: passwordInput });
+                window.localStorage.setItem('authData', authData);
+            } else {
+                window.localStorage.removeItem('authData');
+            }
+        });
+    });
+</script>
 {% endblock %}

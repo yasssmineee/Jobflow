@@ -12,11 +12,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-
-
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 class UserController extends AbstractController
 {
-    #[Route('/edit', name: 'user_edit')]
+  /*  #[Route('/edit', name: 'user_edit')]
     public function editProfile(Request $request): Response
     {
         $user = $this->getUser();
@@ -35,7 +35,45 @@ class UserController extends AbstractController
         return $this->render('user/edit.html.twig', [
             'form' => $form->createView(),
         ]);
+    }*/
+    #[Route('/edit', name: 'user_edit')]
+public function editProfile(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+{
+    
+        /** @var UserInterface|null $user */
+        // Get the current user
+        $user = $this->getUser();
+    $form = $this->createForm(EditProfileType::class, $user);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Vérifier si le champ du mot de passe actuel est correct
+        $currentPassword = $form->get('currentPassword')->getData();
+        if (!$passwordEncoder->isPasswordValid($user, $currentPassword)) {
+            $this->addFlash('error', 'Invalid current password.');
+            return $this->redirectToRoute('user_edit');
+        }
+
+        // Mettre à jour le mot de passe si le champ "nouveau mot de passe" est renseigné
+        $newPassword = $form->get('newPassword')->getData();
+        if ($newPassword) {
+            $encodedPassword = $passwordEncoder->encodePassword($user, $newPassword);
+            $user->setPassword($encodedPassword);
+        }
+
+        // Enregistrer les modifications dans la base de données
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Your profile has been updated successfully.');
+
+        return $this->redirectToRoute('app_home1');
     }
+
+    return $this->render('user/edit.html.twig', [
+        'form' => $form->createView(),
+    ]);
+}
     /*#[Route('/disable', name: 'user_disable')]
     public function disableAccount(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker): Response
     {

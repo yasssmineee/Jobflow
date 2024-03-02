@@ -29,9 +29,10 @@ security:
 
             remember_me:
                 secret: '%kernel.secret%'
-                lifetime: 604800
-                path: /
-                always_remember_me: true
+                #lifetime: 604800
+                #path: /
+                #always_remember_me: false
+             
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -45,9 +46,9 @@ security:
          #- { path: ^/loginad, roles: ROLE_ADMIN }
          #- { path: ^(?!/(login|register)), roles: ROLE_USER }
          - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allow anonymous access to login page
-         - { path: ^/login_check$, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allow anonymous access to login check route
+         #- { path: ^/login_check$, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allow anonymous access to login check route
          - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allow anonymous access to logout route
-         - { path: ^/, roles: ROLE_USER } # Default access for authenticated users
+         #- { path: ^/, roles: ROLE_USER } # Default access for authenticated users
 
 when@test:
     security:
