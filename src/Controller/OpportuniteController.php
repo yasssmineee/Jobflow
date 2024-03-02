@@ -50,7 +50,7 @@ class OpportuniteController extends AbstractController
         $opportunite = new Opportunite();
         $form = $this->createForm(OpportuniteType::class, $opportunite);
         $form->handleRequest($request);
-
+        $opportunite->setIsFavorite(false);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($opportunite);
             $entityManager->flush();
