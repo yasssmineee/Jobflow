@@ -9,10 +9,10 @@
     .table-wrapper { margin-top: 20px; }
     .table-wrapper table { width: 100%; border-collapse: collapse; }
     .table-wrapper th, .table-wrapper td { padding: 8px 12px; border: 1px solid #ddd; }
-.table-wrapper th {
-    background-color: #000;
-    color: #fff; /* Changer la couleur du texte en blanc */
-}
+    .table-wrapper th {
+        background-color: #000;
+        color: #fff; /* Changer la couleur du texte en blanc */
+    }
     .table-wrapper tr:nth-child(even) { background-color: #f2f2f2; }
     .table-wrapper tr:hover { background-color: #ddd; }
     .btn-group { display: flex; justify-content: space-between; }
@@ -20,7 +20,7 @@
 </style>
 
 <div class="d-flex justify-content-center mb-4"> 
-    <form action="{{ path('app_rechercher_sponsor') }}" method="get">
+    <form id="searchForm" action="{{ path('app_rechercher_sponsor') }}" method="get">
         <div class="input-group">
             <input type="text" class="form-control" id="search" name="q" value="{{ searchTerm is defined ? searchTerm : '' }}" placeholder="Rechercher par Nom" style="max-width: 300px;">
             <button type="submit" class="btn btn-primary">Rechercher</button>
@@ -29,35 +29,57 @@
 </div>
 
 <div class="example-wrapper">
-    {% if searchResults is defined and searchResults is not empty %}
-        <h2>Résultats de la recherche pour "{{ searchTerm }}"</h2>
+    <h2>Résultats de la recherche</h2>
 
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Type</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for sponsor in searchResults %}
-                        <tr>
-                            <td>{{ sponsor.nom }}</td>
-                            <td>{{ sponsor.type }}</td>
-                            <td class="btn-group">
-                                <a href="{{ path('app_supp_sponsor', {'id': sponsor.id}) }}" class="btn btn-danger">Supprimer</a>
-                                <a href="{{ path('app_modifier_sponsor', {'id': sponsor.id}) }}" class="btn btn-primary">Modifier</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    {% else %}
-        <p>Aucun résultat trouvé.</p>
-    {% endif %}
+    <div class="table-wrapper">
+        <table id="searchResultsTable">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </div>
 
+<script>
+    $(document).ready(function() {
+        $('#search').on('input', function() {
+            var searchTerm = $(this).val();
+            searchSponsors(searchTerm);
+        });
+
+        function searchSponsors(searchTerm) {
+            $.ajax({
+                url: $('#searchForm').attr('action'),
+                type: 'GET',
+                data: { q: searchTerm },
+                success: function(data) {
+                    $('#searchResultsTable tbody').empty();
+                    if (data.length > 0) {
+                        $.each(data, function(index, sponsor) {
+                            var rowHtml = '<tr>' +
+                                '<td>' + sponsor.nom + '</td>' +
+                                '<td>' + sponsor.type + '</td>' +
+                                '<td class="btn-group">' +
+                                '<a href="{{ path('app_supp_sponsor', {'id': sponsor.id}) }}" class="btn btn-danger">Supprimer</a>' +
+                                '<a href="{{ path('app_modifier_sponsor', {'id': sponsor.id}) }}" class="btn btn-primary">Modifier</a>' +
+                                '</td>' +
+                                '</tr>';
+                            $('#searchResultsTable tbody').append(rowHtml);
+                        });
+                    } else {
+                        $('#searchResultsTable tbody').html('<tr><td colspan="3">Aucun résultat trouvé.</td></tr>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}

@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class SponsorController extends AbstractController
 {
@@ -27,7 +28,8 @@ class SponsorController extends AbstractController
         $sponsors = $this->entityManager->getRepository(Sponsor::class)->findAll();
         
         return $this->render('evenement/sponsor.html.twig', [
-            's' => $sponsors
+            'sponsor' => $sponsors
+            
         ]);
     }
     
@@ -76,43 +78,31 @@ public function supprimersponsor(Sponsor $sponsor, EntityManagerInterface $entit
         ]);
     }
     #[Route('/rechercher_sponsor', name: 'app_rechercher_sponsor')]
-public function searchSponsor(Request $request, EntityManagerInterface $entityManager): Response
+public function searchAjax(Request $request, EntityManagerInterface $entityManager): Response
 {
-    // Créer le formulaire pour la barre de recherche
-    $form = $this->createFormBuilder()
-        ->setAction($this->generateUrl('app_rechercher_sponsor'))
-        ->add('q', TextType::class, ['label' => false, 'attr' => ['placeholder' => 'Rechercher']])
-        ->add('Rechercher', SubmitType::class, ['attr' => ['class' => 'btn btn-primary']])
-        ->getForm();
-
-    // Récupérer le terme de recherche de la requête
+    // Récupérer le terme de recherche de la requête AJAX
     $searchTerm = $request->query->get('q');
 
-    // Si un terme de recherche est fourni, effectuer la recherche par nom
-    if ($searchTerm) {
-        $searchResults = $entityManager->getRepository(Sponsor::class)->findByNom($searchTerm);
-    } else {
-        // Si aucun terme de recherche n'est fourni, afficher tous les sponsors
-        $searchResults = $entityManager->getRepository(Sponsor::class)->findAll();
+    // Effectuer la recherche dans votre source de données (par exemple, une base de données)
+    $queryBuilder = $entityManager->getRepository(Sponsor::class)->createQueryBuilder('s')
+        ->where('s.nom LIKE :searchTerm')
+        ->setParameter('searchTerm', $searchTerm.'%'); // Recherche les sponsors dont le nom commence par le terme de recherche
+
+    // Exécuter la requête
+    $searchResults = $queryBuilder->getQuery()->getResult();
+
+    // Convertir les résultats en tableau associatif pour l'envoi au format JSON
+    $formattedResults = [];
+    foreach ($searchResults as $result) {
+        $formattedResults[] = [
+            'id' => $result->getId(), // Ajout de l'identifiant du sponsor
+            'nom' => $result->getNom(),
+            'type' => $result->getType(),
+            // Ajoutez d'autres champs si nécessaire
+        ];
     }
-    
-    // Trie les résultats de la recherche par nom
-    $searchResults = $this->sortSponsorsByNom($searchResults);
-    
-    return $this->render('evenement/sponsor.html.twig', [
-        'form' => $form->createView(),
-        'searchResults' => $searchResults,
-        'searchTerm' => $searchTerm,
-    ]);
+
+    // Retourner les résultats au format JSON
+    return new JsonResponse($formattedResults);
 }
-
-// Fonction pour trier les sponsors par nom
-private function sortSponsorsByNom($sponsors) {
-    usort($sponsors, function($a, $b) {
-        return strcmp($a->getNom(), $b->getNom());
-    });
-    return $sponsors;
-}
-
-
 }

@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use App\Repository\EvenementRepository;
 
 
 
@@ -23,8 +24,8 @@ class EvenementController extends AbstractController
 {
     private $entityManager;
 private $qrCodeServices;
-    public function __construct(EntityManagerInterface $entityManager , QrCodeServices $qrCodeServices)
-    {
+    public function __construct(EntityManagerInterface $entityManager , QrCodeServices $qrCodeServices,EvenementRepository $evenementRepository)
+    { 
         $this->entityManager = $entityManager;
         $this->qrCodeServices = $qrCodeServices;
     }
@@ -33,23 +34,50 @@ private $qrCodeServices;
     
 
     #[Route('/', name: 'app_evenement')]
-    public function index(): Response
+public function index(Request $request, EvenementRepository $evenementRepository): Response
 { 
-    $evenements = $this->entityManager->getRepository(Evenement::class)->findAll();
-    $qrCodes = [];
+    // Récupérer tous les événements
+    $evenements = $evenementRepository->findAll();
+
+    // Vérifier si le formulaire de tri a été soumis
+    if ($request->isMethod('POST')) {
+        $sortCriteria = $request->request->get('sort');
+
+        // Vérifier si le critère de tri est défini et valide
+        if ($sortCriteria === 'titre') {
+            // Trier les événements par titre
+            usort($evenements, function($a, $b) {
+                return $a->getTitre() <=> $b->getTitre();
+            });
+        } elseif ($sortCriteria === 'localisation') {
+            // Trier les événements par localisation
+            usort($evenements, function($a, $b) {
+                return $a->getLocalisation() <=> $b->getLocalisation();
+            });
+        }
+        
+        // Ajoutez ici d'autres critères de tri si nécessaire
+    }
 
     // Générer les QR codes pour chaque événement
+    $qrCodes = [];
     foreach ($evenements as $evenement) {
         $qrCodes[$evenement->getId()] = $this->qrCodeServices->qrcode($evenement->getId());
     }
     
+    // Récupérer les statistiques sur les titres des événements
+    $stats = $evenementRepository->getStatistiques();
+
     return $this->render('evenement/index.html.twig', [
         'evenements' => $evenements,
         'qrCodes' => $qrCodes,
-        'evenement' => $evenement,
-
+        'stats' => $stats,
+        'evenement' => $evenement, // Assurez-vous que cela est correctement utilisé dans le template Twig
     ]);
 }
+
+
+    
 
     #[Route('/add_evenement', name: 'app_add_evenement')]
     public function Addevenement(Request $request, EntityManagerInterface $entityManager, QrCodeServices $qrCodeServices): Response
@@ -120,15 +148,10 @@ public function supprimerEvenement(Evenement $evenement, EntityManagerInterface 
             'evenement' => $evenement,
         ]);
     }
-    function sortEventsByTitle($events) {
-        usort($events, function($a, $b) {
-            return strcmp($a->getTitre(), $b->getTitre());
-        });
-        return $events;
-    }
+    
     #[Route('/rechercher_evenement', name: 'app_rechercher_evenement')]
-public function searchAjax(Request $request, EntityManagerInterface $entityManager): Response
-{
+    public function searchAjax(Request $request, EntityManagerInterface $entityManager): Response
+    {
     // Récupérer le terme de recherche de la requête Ajax
     $searchTerm = $request->query->get('q');
 
@@ -165,6 +188,28 @@ public function searchAjax(Request $request, EntityManagerInterface $entityManag
 }
 
 
+public function statsEvenements(EvenementRepository $evenementRepository): Response
+    {
+        
+  $stats = $evenementRepository->getStatistiques();
+
+
+        return $this->render('evenement/index.html.twig', [
+            
+            'stats' => $stats,
+        ]);
+    }
+   /* #[Route('/comment-statistics', name:'comment_statistics')]
+    public function statics(PublicationRepository $publicationRepository): Response
+    {
+        $statistics = $publicationRepository->getCommentStatistics();
+
+        return $this->render('publication/stat.html.twig', [
+            'statistics' => $statistics,
+        ]);
+    }
+
+*/
    
 }
 
