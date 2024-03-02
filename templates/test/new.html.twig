@@ -3,9 +3,8 @@
 {% block title %}New Test{% endblock %}
 
 {% block body %}
-    <h1>Create new Test</h1>
 
     {{ include('test/_form.html.twig') }}
 
-    <a href="{{ path('app_test_index') }}">back to list</a>
+ <a class="btn bg-danger m-2 text-white py-2 px-4 mt-4" href="{{ path('app_test_index') }}">back to list</a>
 {% endblock %}

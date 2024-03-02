@@ -78,4 +78,5 @@ class OpportuniteController extends AbstractController
 
         return $this->redirectToRoute('app_opportunite_index', [], Response::HTTP_SEE_OTHER);
     }
+    
 }

@@ -3,7 +3,7 @@
 {% block title %}Test{% endblock %}
 
 {% block body %}
-    <h1>Test</h1>
+<a class="btn btn-dark m-2 text-white py-2 px-4 mt-4" href="{{ path('app_test_index') }}">back to list</a>
 
     <table class="table">
         <tbody>
@@ -26,9 +26,11 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_test_index') }}">back to list</a>
-
-    <a href="{{ path('app_test_edit', {'id': test.id}) }}">edit</a>
+    
+<div class="d-flex">
+ <a class="btn btn-outline-dark  m-2 text-black py-2 px-4 mt-4" href="{{ path('app_test_edit', {'id': test.id}) }}">Edit</a>
 
     {{ include('test/_delete_form.html.twig') }}
+</div>
+
 {% endblock %}

@@ -1,10 +1,12 @@
 {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-    {{ form_row(form.type, {
-    'label': 'Sélectionnez le type',
-    'attr': {'class': 'form-control'}
-}) }}
+
+
+   <div class=" d-flex flex-column  justify-content-center w-100 align-items-center" data-wow-delay=".5s">
+                            <div class="p-5 rounded contact-form w-75 m-4">
     {# Autres champs de formulaire #}
     {{ form_widget(form) }}
     {# Bouton de soumission #}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <button class="btn bg-primary text-white py-2 px-4 mt-4" type="submit">{{ button_label|default('Save') }}</button>
+    </div>
+      </div>
 {{ form_end(form) }}

@@ -2,38 +2,56 @@
 
 {% block title %}Opportunite index{% endblock %}
 
-{% block body %}
-    <h1>Opportunite index</h1>
+{% block stylesheet %}
+<link rel="stylesheet" href="{{asset('css/style.css')}}">
+<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Descreption</th>
-                <th>Type</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+{% endblock %}
+{% block body %}
+       <a class="btn bg-danger m-2 text-white py-2 px-4 mt-4" href="{{ path('app_opportunite_new') }}">Create new</a>
+
+
+                  <div class="container-fluid project py-5 my-5">
+            <div class="container py-5">
+                <div class="text-center mx-auto pb-5 wow fadeIn" data-wow-delay=".3s" style="max-width: 600px;">
+                    <h5 class="text-primary">Our Opportunites</h5>
+                    <h1>Our Recently Completed Projects</h1>
+                </div>
+                <div class="row g-5">
+
         {% for opportunite in opportunites %}
-            <tr>
+
+                    <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay=".3s">
+                        <div class="project-item">
+                            <div class="project-img">
+                                <img src="{{asset('img/project-1.jpg')}}" class="img-fluid w-100 rounded" alt="">
+                                <div class="project-content">
+                                <a href="{{ path('app_opportunite_show', {'id': opportunite.id}) }}"  class="text-center">
+                                        <h4 class="text-secondary">{{ opportunite.nom }}</h4>
+                                        <p class="m-0 text-white">{{ opportunite.type }}</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+            {# <tr>
                 <td>{{ opportunite.id }}</td>
                 <td>{{ opportunite.nom }}</td>
                 <td>{{ opportunite.descreption }}</td>
                 <td>{{ opportunite.type }}</td>
                 <td>
                     {# <a href="{{ path('app_opportunite_show', {'id': opportunite.id}) }}">show</a>
-                    <a href="{{ path('app_opportunite_edit', {'id': opportunite.id}) }}">edit</a> #}
+                    <a href="{{ path('app_opportunite_edit', {'id': opportunite.id}) }}">edit</a> 
                 </td>
-            </tr>
+            </tr> #}
         {% else %}
             <tr>
                 <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
-        </tbody>
-    </table>
+            </div>
+            </div>
+        </div>
 
-    <a href="{{ path('app_opportunite_new') }}">Create new</a>
 {% endblock %}

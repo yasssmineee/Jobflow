@@ -42,7 +42,7 @@ class Opportunite
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne (inversedBy : 'Opportunites')]
     private ?Test $idtest = null;
 
     public function getId(): ?int
@@ -89,6 +89,7 @@ class Opportunite
     public function getIdtest(): ?test
     {
         return $this->idtest;
+
     }
 
     public function setIdtest(?test $idtest): static

@@ -17,14 +17,14 @@
         </thead>
         <tbody>
         {% for test in tests %}
-            <tr>
+            <tr class="">
                 <td>{{ test.id }}</td>
                 <td>{{ test.Type }}</td>
                 <td>{{ test.score }}</td>
                 <td>{{ test.duree }}</td>
                 <td>
-                    <a href="{{ path('app_test_show', {'id': test.id}) }}">show</a>
-                    <a href="{{ path('app_test_edit', {'id': test.id}) }}">edit</a>
+                    <a  class="btn btn-outline-danger  text-black py-2 px-4 " href="{{ path('app_test_show', {'id': test.id}) }}">show</a>
+                    <a  class="btn btn-outline-dark   text-black py-2 px-4 " href="{{ path('app_test_edit', {'id': test.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -35,5 +35,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_test_new') }}">Create new</a>
+    <a  class="btn btn-outline-dark   text-black py-2 px-4 "  href="{{ path('app_test_new') }}">Create new</a>
 {% endblock %}
