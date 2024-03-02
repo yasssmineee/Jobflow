@@ -8,6 +8,7 @@
 
 {% endblock %}
 {% block body %}
+
        <a class="btn bg-danger m-2 text-white py-2 px-4 mt-4" href="{{ path('app_opportunite_new') }}">Create new</a>
 
 
@@ -18,6 +19,12 @@
                     <h1>Our Recently Completed Projects</h1>
                 </div>
                 <div class="row g-5">
+                {{ form_start(form, { 'attr': {'class': 'form-inline mb-4'} }) }}
+{{ form_widget(form.q, { 'value': q }) }} {# Add this line to pre-populate the search fields with the search parameters #}
+{{ form_widget(form.type, { 'value': type }) }}
+{{ form_widget(form.sort_by, { 'value': sort_by }) }}
+<button type="submit" class="btn btn-primary">Search</button>
+{{ form_end(form) }}
 
         {% for opportunite in opportunites %}
 

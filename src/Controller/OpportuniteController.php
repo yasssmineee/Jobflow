@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Opportunite;
+use App\Form\OpportuniteSearchType;
 use App\Form\OpportuniteType;
 use App\Repository\OpportuniteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -15,11 +17,31 @@ use Symfony\Component\Routing\Attribute\Route;
 class OpportuniteController extends AbstractController
 {
     #[Route('/', name: 'app_opportunite_index', methods: ['GET'])]
-    public function index(OpportuniteRepository $opportuniteRepository): Response
+    public function index(Request $request,OpportuniteRepository $opportuniteRepository): Response
     {
-        return $this->render('opportunite/index.html.twig', [
-            'opportunites' => $opportuniteRepository->findAll(),
-        ]);
+
+        // filter by opportunite name 
+        $form = $this->createForm(OpportuniteSearchType::class);
+        $form->handleRequest($request);
+        $opp = $opportuniteRepository->findAll();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $opp = $opportuniteRepository->search($data['q'], $data['type'], $data['sort_by']);
+        }
+        // get the current route name
+        $routeName=$request->attributes->get('_route');  
+        return $this->render(
+            'opportunite/index.html.twig',
+            array(
+                'form' => $form->createView(),
+                'opportunites' => $opp,
+                'q' => $data['q'] ?? null,
+                'type' => $data['type'] ?? null,
+                'sort_by' => $data['sort_by'] ?? 'name',
+                'routeName' => $routeName
+            )
+        );
+       
     }
 
     #[Route('/new', name: 'app_opportunite_new', methods: ['GET', 'POST'])]
@@ -32,6 +54,7 @@ class OpportuniteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($opportunite);
             $entityManager->flush();
+            $this->addFlash('success', 'User activated successfully');
 
             return $this->redirectToRoute('app_opportunite_new', [], Response::HTTP_SEE_OTHER);
         }

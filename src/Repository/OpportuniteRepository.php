@@ -45,4 +45,25 @@ class OpportuniteRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+public function search($q = null, $type = null, $sortBy = null)
+{
+    $queryBuilder = $this->createQueryBuilder('p');
+
+    if ($q) {
+        $queryBuilder->andWhere('p.nom LIKE :q')
+            ->setParameter('q', '%' . $q . '%');
+    }
+
+    if ($type) {
+        $queryBuilder->andWhere('p.type = :type')
+            ->setParameter('type', $type);
+    }
+
+    if ($sortBy) {
+        $queryBuilder->orderBy('p.' . $sortBy, 'ASC');
+    }
+
+    return $queryBuilder->getQuery()->getResult();
+}
+
 }
