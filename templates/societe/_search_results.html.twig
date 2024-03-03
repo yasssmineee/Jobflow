@@ -1,0 +1,36 @@
+{# _search_results.html.twig #}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nom</th>
+            <th>Localisation</th>
+            <th>Descreption</th>
+            <th>Siteweb</th>
+            <th>Numtel</th>
+            <th>Secteur</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for societe in societes %}
+            <tr>
+                <td>{{ societe.id }}</td>
+                <td>{{ societe.nom }}</td>
+                <td>{{ societe.localisation }}</td>
+                <td>{{ societe.descreption }}</td>
+                <td>{{ societe.siteweb }}</td>
+                <td>{{ societe.numtel }}</td>
+                <td>{{ societe.secteur }}</td>
+                <td>
+                    <a href="{{ path('app_societe_show', {'id': societe.id}) }}">Show</a>
+                    <a href="{{ path('app_societe_edit', {'id': societe.id}) }}">Edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">No records found</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

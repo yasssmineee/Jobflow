@@ -1,0 +1,31 @@
+{# _search_results.html.twig #}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nom</th>
+            <th>Duree</th>
+            <th>Descreption</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for partenaire in partenaires %}
+            <tr>
+                <td>{{ partenaire.id }}</td>
+                <td>{{ partenaire.nom }}</td>
+                <td>{{ partenaire.duree }}</td>
+                <td>{{ partenaire.descreption }}</td>
+               
+                <td>
+                    <a href="{{ path('app_partenaire_show', {'id': partenaire.id}) }}">Show</a>
+                    <a href="{{ path('app_partenaire_edit', {'id': partenaire.id}) }}">Edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">No records found</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

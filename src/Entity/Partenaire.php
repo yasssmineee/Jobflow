@@ -28,7 +28,7 @@ class Partenaire
     #[ORM\Column(length: 255)]
     private ?string $descreption = null;
 
-    #[ORM\ManyToMany(targetEntity: Societe::class)]
+#[ORM\ManyToMany(targetEntity: Societe::class)]
     private Collection $idsociete;
 
     public function __construct()

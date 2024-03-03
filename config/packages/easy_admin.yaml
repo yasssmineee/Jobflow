@@ -1,0 +1,4 @@
+easy_admin:
+    design:
+        dashboard:
+            - { widget: 'blocked_users_chart', type: 'chart', data: 'blocked_users_data', chart_type: 'pie' }

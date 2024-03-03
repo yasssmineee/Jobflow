@@ -21,6 +21,7 @@ security:
             custom_authenticators:
                 - App\Security\AppAdminAuthenticator
                 - App\Security\AppUserAuthenticator
+               
             entry_point: App\Security\AppUserAuthenticator
             logout:
                 path: app_logout

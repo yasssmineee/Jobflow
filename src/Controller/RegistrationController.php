@@ -30,14 +30,22 @@ class RegistrationController extends AbstractController
                     
                 )
             );
+            
 
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
            
+            // Check if 'ROLE_SOCIETE' is included in user roles
+            if (in_array('ROLE_SOCIETE', $user->getRoles(), true)) {
+                // Redirect to 'app_societe_new' route
+                return $this->redirectToRoute('app_societe_new');
+            }
+
+            // Redirect to another route or return a response
+        
             return $this->redirectToRoute('app_login');
 
-            dd('formvalide');
         }
 
         return $this->render('registration/register.html.twig', [

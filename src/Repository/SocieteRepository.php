@@ -8,11 +8,6 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Societe>
- *
- * @method Societe|null find($id, $lockMode = null, $lockVersion = null)
- * @method Societe|null findOneBy(array $criteria, array $orderBy = null)
- * @method Societe[]    findAll()
- * @method Societe[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class SocieteRepository extends ServiceEntityRepository
 {
@@ -21,28 +16,26 @@ class SocieteRepository extends ServiceEntityRepository
         parent::__construct($registry, Societe::class);
     }
 
-//    /**
-//     * @return Societe[] Returns an array of Societe objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findBySearchTerm($searchTerm): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.nom LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . $searchTerm . '%')
+            ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+// In SocieteRepository.php
 
-//    public function findOneBySomeField($value): ?Societe
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+public function getStatistiques()
+    {
+        return $this->createQueryBuilder('e')
+        ->select('e.nom as nom, e.secteur as secteur, count(e.id) as count')
+        ->groupBy('e.nom, e.secteur')
+        ->getQuery()
+        ->getResult();
+    }
+
+
+   
 }

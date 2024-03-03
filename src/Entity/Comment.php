@@ -29,6 +29,9 @@ class Comment
 
     #[ORM\ManyToOne(inversedBy: 'Comment')]
     private ?Post $post = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -94,5 +97,17 @@ class Comment
 
         return $this;
     }
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
 }
 ?>

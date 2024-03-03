@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\ChatRepository;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ChatRepository::class)]
 class Chat
@@ -15,18 +15,25 @@ class Chat
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $snid = null;
+    #[ORM\Column(length: 255)]
+    private ?string $chatname = null;
 
-    #[ORM\Column]
-    private ?int $rcid = null;
+    #[ORM\Column(length: 255)]
+    private ?string $username = null;
 
-    #[ORM\OneToMany(targetEntity: project::class, mappedBy: 'idchat')]
-    private Collection $projects;
+    #[ORM\Column(length: 255)]
+    private ?string $chatpass = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $content = null;
+
+   /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="chat")
+     */
+    private $users;
     public function __construct()
     {
-        $this->projects = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -34,57 +41,59 @@ class Chat
         return $this->id;
     }
 
-    public function getSnid(): ?int
+    public function getChatname(): ?string
     {
-        return $this->snid;
+        return $this->chatname;
     }
 
-    public function setSnid(int $snid): static
+    public function setChatname(string $chatname): static
     {
-        $this->snid = $snid;
+        $this->chatname = $chatname;
 
         return $this;
     }
 
-    public function getRcid(): ?int
+    public function getUsername(): ?string
     {
-        return $this->rcid;
+        return $this->username;
     }
 
-    public function setRcid(int $rcid): static
+    public function setUsername(string $username): static
     {
-        $this->rcid = $rcid;
+        $this->username = $username;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Project>
+    public function getChatpass(): ?string
+    {
+        return $this->chatpass;
+    }
+
+    public function setChatpass(string $chatpass): static
+    {
+        $this->chatpass = $chatpass;
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(string $content): static
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+  /**
+     * @return Collection|User[]
      */
-    public function getProjects(): Collection
+    public function getUsers(): Collection
     {
-        return $this->projects;
+        return $this->users;
     }
 
-    public function addProject(Project $project): static
-    {
-        if (!$this->projects->contains($project)) {
-            $this->projects->add($project);
-            $project->setIdchat($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProject(Project $project): static
-    {
-        if ($this->projects->removeElement($project)) {
-            // set the owning side to null (unless already changed)
-            if ($project->getIdchat() === $this) {
-                $project->setIdchat(null);
-            }
-        }
-
-        return $this;
-    }
 }

@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Partenaire index{% endblock %}
+
+{% block body %}
+    <h1>Societe index</h1>
+    
+    <!-- Add a canvas element for the chart -->
+    <canvas id="myChart" width="400" height="200"></canvas>
+    
+    <!-- Rest of your HTML content -->
+
+    <script>
+        $(document).ready(function() {
+            // Fetch data from the server using AJAX
+            $.ajax({
+                url: '{{ path('app_partenaire_statistics') }}',
+                method: 'GET',
+                success: function(data) {
+                    // Data received, initialize Chart.js
+                    var ctx = document.getElementById('myChart').getContext('2d');
+                    var myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: Object.keys(data),
+                            datasets: [{
+                                label: 'Number of Partenaires',
+                                data: Object.values(data),
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

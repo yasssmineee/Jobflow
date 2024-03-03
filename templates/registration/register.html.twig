@@ -80,6 +80,9 @@
                                     {{ form_row(registrationForm.plainPassword, {'label': 'Password','attr': {'class':
                                     'form-control border-0 py-3', 'placeholder': 'Your Password'} }) }}
                                 </div>
+                                <div class="mb-3">
+                                    {{ form_row(registrationForm.roles, {'label': 'Roles', 'attr': {'class': 'form-control'} }) }}
+                                </div>
                                 <div>
                                      {{form_row(registrationForm.captcha)}}
                                      {{form_errors(registrationForm.captcha)}}

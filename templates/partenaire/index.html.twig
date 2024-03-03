@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Partenaire index{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="my-4">Partenaire Index</h1>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <form action="{{ path('app_partenaire_index') }}" method="post" class="d-flex">
+                <select class="form-select me-2" name="sort">
+                    <option value="nom">Trier par nom</option>
+                    <option value="duree">Trier par durée</option>
+                    <option value="descreption">Trier par descreption</option>
+                </select>
+                <button type="submit" class="btn btn-secondary">Trier</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="form-control" id="searchInput" placeholder="Rechercher par nom" onkeyup="searchPosts()">
+        </div>
+    </div>
+
+    <div id="searchResults" class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Durée</th>
+                    <th>Descreption</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for partenaire in partenaires %}
+                    <tr>
+                        <td>{{ partenaire.id }}</td>
+                        <td>{{ partenaire.nom }}</td>
+                        <td>{{ partenaire.duree }}</td>
+                        <td>{{ partenaire.descreption }}</td>
+                        <td>
+                            <a href="{{ path('app_partenaire_show', {'id': partenaire.id}) }}" class="btn btn-primary btn-sm">Voir</a>
+                            <a href="{{ path('app_partenaire_edit', {'id': partenaire.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">Aucun enregistrement trouvé</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{{ path('app_partenaire_new') }}" class="btn btn-success">Créer nouveau</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Function to perform AJAX search
+    function searchPosts() {
+        var searchInput = document.getElementById('searchInput').value;
+        var searchResultsContainer = document.getElementById('searchResults');
+
+        // Clear previous search results inside the partenaires container
+        searchResultsContainer.innerHTML = '';
+
+        // Make AJAX request
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                // Update search results container with response
+                searchResultsContainer.innerHTML = this.responseText;
+            }
+        };
+        xhr.open("GET", "{{ path('searchP') }}?search=" + searchInput, true);
+        xhr.send();
+    }
+</script>
+<div class="container mt-5">
+    <h1 class="my-4">Statistiques</h1>
+    <div class="row">
+        <div class="col">
+            <canvas id="pieChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    var ctx = document.getElementById('pieChart').getContext('2d');
+    var data = {
+        labels: [
+            {% for stat in stats %}
+                "{{ stat.nom }} - {{ stat.duree }}",
+            {% endfor %}
+        ],
+        datasets: [{
+            data: [
+                {% for stat in stats %}
+                    {{ stat.count }},
+                {% endfor %}
+            ],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 206, 86, 0.7)',
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(153, 102, 255, 0.7)',
+            ],
+        }]
+    };
+    var options = {
+        responsive: true,
+        maintainAspectRatio: false,
+    };
+    var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: data,
+        options: options
+    });
+</script>
+
+{% endblock %}

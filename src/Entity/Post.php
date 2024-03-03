@@ -32,6 +32,10 @@ class Post
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class)]
     private Collection $Comment;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    private ?User $user = null;
+
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
@@ -124,6 +128,17 @@ class Post
       {
           $this->image = $image;
 
+          return $this;
+      }
+      public function getUser(): ?User
+      {
+          return $this->user;
+      }
+  
+      public function setUser(?User $user): self
+      {
+          $this->user = $user;
+  
           return $this;
       }
 }

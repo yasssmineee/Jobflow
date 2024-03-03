@@ -20,20 +20,28 @@ class Societe
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "localisation ne doit pas etre vide ")]
     private ?string $localisation = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "descreption ne doit pas etre vide ")]
     private ?string $descreption = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "site web ne doit pas etre vide ")]
     private ?string $siteweb = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "numero tel ne doit pas etre des caracthere ")]
     private ?int $numtel = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "secteur ne doit pas etre vide ")]
     private ?string $secteur = null;
 
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: "societe")]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
+    private $user;
     public function getId(): ?int
     {
         return $this->id;
@@ -116,5 +124,18 @@ class Societe
         // For example, I'm using 'nom' property here
         return $this->nom;
     }
+   
+   
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
 }
-?>

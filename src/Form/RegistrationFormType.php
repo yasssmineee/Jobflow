@@ -22,14 +22,14 @@ class RegistrationFormType extends AbstractType
         
         ->add('lastname')    
         ->add('email')
-       /* ->add('roles', ChoiceType::class, [
+        ->add('roles', ChoiceType::class, [
             'choices' => [
                 'User' => 'ROLE_USER',
-                'Admin' => 'ROLE_ADMIN',
+                'Company' => 'ROLE_SOCIETE',
             ],
             'multiple' => true,  // If users can have multiple roles
             'expanded' => true,  // If you want to display roles as checkboxes
-        ])*/
+        ])
            /* ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [
