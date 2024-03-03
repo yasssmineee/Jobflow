@@ -43,16 +43,18 @@ public function index(Request $request, EvenementRepository $evenementRepository
     if ($request->isMethod('POST')) {
         $sortCriteria = $request->request->get('sort');
 
-        // Vérifier si le critère de tri est défini et valide
+        // Trier les événements en fonction du critère de tri sélectionné
         if ($sortCriteria === 'titre') {
-            // Trier les événements par titre
             usort($evenements, function($a, $b) {
                 return $a->getTitre() <=> $b->getTitre();
             });
         } elseif ($sortCriteria === 'localisation') {
-            // Trier les événements par localisation
             usort($evenements, function($a, $b) {
                 return $a->getLocalisation() <=> $b->getLocalisation();
+            });
+        } elseif ($sortCriteria === 'nbparticipant') {
+            usort($evenements, function($a, $b) {
+                return $a->getNbParticipant() <=> $b->getNbParticipant();
             });
         }
         
@@ -75,7 +77,6 @@ public function index(Request $request, EvenementRepository $evenementRepository
         'evenement' => $evenement, // Assurez-vous que cela est correctement utilisé dans le template Twig
     ]);
 }
-
 
     
 
@@ -148,44 +149,43 @@ public function supprimerEvenement(Evenement $evenement, EntityManagerInterface 
             'evenement' => $evenement,
         ]);
     }
-    
     #[Route('/rechercher_evenement', name: 'app_rechercher_evenement')]
     public function searchAjax(Request $request, EntityManagerInterface $entityManager): Response
     {
-    // Récupérer le terme de recherche de la requête Ajax
-    $searchTerm = $request->query->get('q');
+        // Récupérer le terme de recherche de la requête Ajax
+        $searchTerm = $request->query->get('q');
 
-    // Vérifier si le terme de recherche est vide
-    if (empty($searchTerm)) {
-        // Chargez tous les événements si le terme de recherche est vide
-        $searchResults = $entityManager->getRepository(Evenement::class)->findAll();
-    } else {
-        // Effectuer la recherche dans votre source de données (par exemple, une base de données)
-        $searchResults = $entityManager->getRepository(Evenement::class)->createQueryBuilder('e')
-            ->where('e.titre LIKE :searchTerm')
-            ->setParameter('searchTerm', $searchTerm.'%') // Recherche les événements dont le titre commence par le terme de recherche
-            ->getQuery()
-            ->getResult();
+        // Vérifier si le terme de recherche est vide
+        if (empty($searchTerm)) {
+            // Chargez tous les événements si le terme de recherche est vide
+            $searchResults = $entityManager->getRepository(Evenement::class)->findAll();
+        } else {
+            // Effectuer la recherche dans votre source de données (par exemple, une base de données)
+            $searchResults = $entityManager->getRepository(Evenement::class)->createQueryBuilder('e')
+                ->where('e.titre LIKE :searchTerm OR e.localisation LIKE :searchTerm')
+                ->setParameter('searchTerm', '%'.$searchTerm.'%') // Recherche les événements dont le titre ou la localisation contiennent le terme de recherche
+                ->getQuery()
+                ->getResult();
+        }
+
+        // Convertir les résultats en tableau associatif pour l'envoi au format JSON
+        $formattedResults = [];
+        foreach ($searchResults as $result) {
+            $formattedResults[] = [
+                'titre' => $result->getTitre(),
+                'localisation' => $result->getLocalisation(),
+                'date' => $result->getDate()->format('Y-m-d'), // Formatage de la date
+                'heure' => $result->getHeure()->format('H:i:s'), // Formatage de l'heure
+                'nbparticipant' => $result->getNbParticipant(),
+                'image' => $result->getImage(), // Assurez-vous que cette méthode renvoie le chemin de l'image
+                'id' => $result->getId(), // Ajoutez l'ID de l'événement
+                // Ajoutez d'autres champs si nécessaire
+            ];
+        }
+
+        // Retourner les résultats au format JSON
+        return $this->json($formattedResults);
     }
-
-    // Convertir les résultats en tableau associatif pour l'envoi au format JSON
-    $formattedResults = [];
-    foreach ($searchResults as $result) {
-        $formattedResults[] = [
-            'titre' => $result->getTitre(),
-            'localisation' => $result->getLocalisation(),
-            'date' => $result->getDate()->format('Y-m-d'), // Formatage de la date
-            'heure' => $result->getHeure()->format('H:i:s'), // Formatage de l'heure
-            'nbparticipant' => $result->getNbParticipant(),
-            'image' => $result->getImage(), // Assurez-vous que cette méthode renvoie le chemin de l'image
-            'id' => $result->getId(), // Ajoutez l'ID de l'événement
-            // Ajoutez d'autres champs si nécessaire
-        ];
-    }
-
-    // Retourner les résultats au format JSON
-    return $this->json($formattedResults);
-}
 
 
 public function statsEvenements(EvenementRepository $evenementRepository): Response
