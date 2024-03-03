@@ -9,7 +9,13 @@ use App\Repository\OpportuniteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Logo\Logo;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -17,32 +23,60 @@ use Symfony\Component\Routing\Attribute\Route;
 class OpportuniteController extends AbstractController
 {
     #[Route('/', name: 'app_opportunite_index', methods: ['GET'])]
-    public function index(Request $request,OpportuniteRepository $opportuniteRepository): Response
+    public function index(Request $request, OpportuniteRepository $opportuniteRepository): Response
     {
-
+        // Get the client's IP address from the request
+// Get your local network IP address and concatenate the port
+        $localIpAddress = trim(shell_exec("ifconfig en0 | grep inet | grep -v inet6 | awk '{print $2}'")) .':8000';
+    
+        // Generate the URL with the client's IP address
         // filter by opportunite name 
         $form = $this->createForm(OpportuniteSearchType::class);
         $form->handleRequest($request);
-        $opp = $opportuniteRepository->findAll();
+        $opportunites = $opportuniteRepository->findAll();
+        $qrCodes = [];
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $opp = $opportuniteRepository->search($data['q'], $data['type'], $data['sort_by']);
+            $opportunites = $opportuniteRepository->search($data['q'], $data['type'], $data['sort_by']);
         }
+    
+        $writer = new PngWriter();
+    
+        foreach ($opportunites as $opportunite) {
+            $url = sprintf('http://%s%s', $localIpAddress, $this->generateUrl('app_opportunite_show', ['id' => $opportunite->getId()]));
+    
+            $qrCode = QrCode::create($url)
+                ->setEncoding(new Encoding('UTF-8'))
+                ->setSize(120)
+                ->setMargin(0)
+                ->setForegroundColor(new Color(0, 0, 0))
+                ->setBackgroundColor(new Color(255, 255, 255));
+            
+            $qrCodes[$opportunite->getId()] = $writer->write(
+                $qrCode,
+                null,
+                Label::create('')->setFont(new NotoSans(8))->setText($opportunite->getNom())
+            )->getDataUri();
+        }
+    
         // get the current route name
-        $routeName=$request->attributes->get('_route');  
+        $routeName = $request->attributes->get('_route');
+        
         return $this->render(
             'opportunite/index.html.twig',
             array(
                 'form' => $form->createView(),
-                'opportunites' => $opp,
+                'opportunites' => $opportunites,
                 'q' => $data['q'] ?? null,
                 'type' => $data['type'] ?? null,
                 'sort_by' => $data['sort_by'] ?? 'name',
-                'routeName' => $routeName
+                'routeName' => $routeName,
+                'qrCodes' => $qrCodes
             )
         );
-       
     }
+    
 
     #[Route('/new', name: 'app_opportunite_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response

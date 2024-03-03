@@ -31,9 +31,10 @@
                     <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay=".3s">
                         <div class="project-item">
                             <div class="project-img">
-                            <a href="#">Add to Favourites </a>
                                 <img src="{{asset('img/project-1.jpg')}}" class="img-fluid w-100 rounded" alt="">
                                 <div class="project-content">
+                                <img src="{{ qrCodes[opportunite.id] }}" alt="QR Code for Opportunite {{ opportunite.id }}">
+
                                 <a href="{{ path('app_opportunite_show', {'id': opportunite.id}) }}"  class="text-center">
                                         <h4 class="text-secondary">{{ opportunite.nom }}</h4>
                                         <p class="m-0 text-white">{{ opportunite.type }}</p>
