@@ -45,4 +45,14 @@ class SponsorRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+public function getStatistiques()
+{
+    return $this->getEntityManager()
+        ->createQueryBuilder()
+        ->select('s.nom as nom, s.type as type, count(s.id) as count')
+        ->from(Sponsor::class, 's')
+        ->groupBy('s.nom, s.type')
+        ->getQuery()
+        ->getResult();
+}
 }
