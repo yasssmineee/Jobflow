@@ -1,20 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProfileController!{% endblock %}
+{% block title %}Societe Profile{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% block content %}
+    <h1>Societe Profile</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Nom</th>
+                <td>{{ app.user.societe.nom }}</td>
+            </tr>
+            <tr>
+                <th>Localisation</th>
+                <td>{{ app.user.societe.localisation }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ app.user.societe.descreption }}</td>
+            </tr>
+            <tr>
+                <th>Site Web</th>
+                <td>{{ app.user.societe.siteweb }}</td>
+            </tr>
+            <tr>
+                <th>Numéro de Téléphone</th>
+                <td>{{ app.user.societe.numtel }}</td>
+            </tr>
+            <tr>
+                <th>Secteur</th>
+                <td>{{ app.user.societe.secteur }}</td>
+            </tr>
+        </tbody>
+    </table>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/user/Desktop/3A46/projetweb/Jobflow/src/Controller/ProfileController.php'|file_link(0) }}">src/Controller/ProfileController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/user/Desktop/3A46/projetweb/Jobflow/templates/profile/index.html.twig'|file_link(0) }}">templates/profile/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <a href="{{ path('app_home') }}">Back to Home</a>
+    <a href="{{ path('app_psociete_edit', {'id': app.user.societe.id}) }}">Edit Profile</a>
 {% endblock %}

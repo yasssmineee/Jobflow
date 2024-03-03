@@ -21,7 +21,7 @@ security:
             custom_authenticators:
                 - App\Security\AppAdminAuthenticator
                 - App\Security\AppUserAuthenticator
-               
+                - App\Security\AppSocieteAuthenticator
             entry_point: App\Security\AppUserAuthenticator
             logout:
                 path: app_logout
@@ -44,11 +44,11 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-         #- { path: ^/loginad, roles: ROLE_ADMIN }
-         #- { path: ^(?!/(login|register)), roles: ROLE_USER }
-         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allow anonymous access to login page
+        - { path: ^/loginad, roles: ROLE_ADMIN }
+        #- { path: ^/login, roles: ROLE_USER }
+        #- { path: ^/logins, roles: ROLE_SOCIETE }
          #- { path: ^/login_check$, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allow anonymous access to login check route
-         - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allow anonymous access to logout route
+        - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allow anonymous access to logout route
          #- { path: ^/, roles: ROLE_USER } # Default access for authenticated users
 
 when@test:
