@@ -28,7 +28,7 @@ class Postuler
     #[ORM\Column(length: 255)]
     private ?string $status = null;
     
-    #[ORM\ManyToOne (inversedBy : 'Opportunites')]
+    #[ORM\ManyToOne(targetEntity: Opportunite::class)]
     private ?Opportunite $idOpportunite = null;
 
     public function getId(): ?int

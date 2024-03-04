@@ -28,8 +28,11 @@
 
     <a href="{{ path('app_opportunite_index') }}" class="btn bg-info m-2 text-white py-2 px-4 mt-4">back to list</a>
 
+    {% if is_granted('ROLE_USER') and not is_granted('ROLE_SOCIETE')%}
 
 <a href="{{ path('app_postuler_new', {'idOpportunite': opportunite.id}) }}" class="btn bg-danger m-2 text-white py-2 px-4 mt-4">Postuler</a>
+{% endif %}
+
 
 {% if is_granted('ROLE_SOCIETE') and app.user is defined and app.user == opportunite.user %}
 <a href="{{ path('app_opportunite_edit', {'id': opportunite.id}) }}">Edit</a> 

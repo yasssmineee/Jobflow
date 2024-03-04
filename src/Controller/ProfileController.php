@@ -18,7 +18,7 @@ class ProfileController extends AbstractController
         $user = $security->getUser();
         $username = $user ? $user->getUserIdentifier() : null;
 
-        return $this->render('home/userlogin.html.twig', [
+        return $this->render('home/aveclogin.html.twig', [
             'username' => $username,
         ]);
     }

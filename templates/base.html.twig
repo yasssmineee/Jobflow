@@ -90,7 +90,16 @@
                             <a href="{{ path('app_opportunite_index') }}" class="nav-item nav-link ">Opportunities</a>
                             {% if is_granted('ROLE_SOCIETE') %}
                         <a href="{{ path('app_opportunite') }}" class="nav-item nav-link ">Mes opportunites</a>
+                    <a href="{{ path('app_postuler') }}" class="nav-item nav-link ">Candidats</a>
+
+                        
                     {% endif %}
+                    {% if is_granted('ROLE_USER') and not is_granted('ROLE_SOCIETE')%}
+                <a href="{{ path('app_favorites') }}" class="nav-item nav-link ">Favorites</a>
+            <a href="{{ path('app_postuler_user') }}" class="nav-item nav-link ">Mes condidatures</a>
+
+                
+            {% endif %}
                         <a href="{{ path('app_login') }}" class="nav-item nav-link " >Login</a>
 
                            

@@ -68,7 +68,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      #[ORM\JoinColumn(nullable: true)]
      private $chat;
 
+ 
+    #[ORM\OneToMany(targetEntity: Favorite::class,mappedBy: 'user')]
 
+    #[ORM\JoinColumn(nullable: true)]
+    private Collection $favorites;
 
     public function getStatus(): ?bool
     {
@@ -103,6 +107,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->posts = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->projects = new ArrayCollection();
+        $this->favorites = new ArrayCollection();
        
     }
 
@@ -121,6 +126,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->email = $email;
 
         return $this;
+    }
+    /**
+     * @return Collection|Favorite[]
+     */
+    public function getFavorites(): Collection
+    {
+        return $this->favorites;
     }
 
     public function getRoles(): array
