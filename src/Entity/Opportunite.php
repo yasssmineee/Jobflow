@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Mime\Message;
 
-
+/**
+ * @IgnoreAnnotation("ORM\Entity")
+ */
 #[ORM\Entity(repositoryClass:OpportuniteRepository::class)]
 class Opportunite
 {
@@ -17,9 +19,6 @@ class Opportunite
 
 
     private ?int $id = null;
-/**
-     * @ORM\Column(type="string", length=255) // Une seule annotation Column avec tous les paramètres
-     */
     #[Assert\NotBlank(message: "le champ ne doit pas etre vide ")]
     #[Assert\Regex(
         pattern: '/^[a-zA-Z]+$/',

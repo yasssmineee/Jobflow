@@ -19,7 +19,6 @@ use Endroid\QrCode\Writer\PngWriter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 #[Route('/opportunite')]
 class OpportuniteController extends AbstractController
 {
@@ -94,7 +93,7 @@ class OpportuniteController extends AbstractController
             return $this->redirectToRoute('app_opportunite_new', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('opportunite/new.html.twig', [
+        return $this->renderForm('opportunite/new.html.twig', [
             'opportunite' => $opportunite,
             'form' => $form,
         ]);
@@ -120,7 +119,7 @@ class OpportuniteController extends AbstractController
             return $this->redirectToRoute('app_opportunite_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('opportunite/edit.html.twig', [
+        return $this->renderForm('opportunite/edit.html.twig', [
             'opportunite' => $opportunite,
             'form' => $form,
         ]);
@@ -149,7 +148,7 @@ class OpportuniteController extends AbstractController
             return $this->redirectToRoute('app_opportunite_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('opportunite/edit.html.twig', [
+        return $this->renderForm('opportunite/edit.html.twig', [
             'opportunite' => $opportunite,
             'form' => $form,
         ]);

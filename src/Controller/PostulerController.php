@@ -71,7 +71,7 @@ class PostulerController extends AbstractController
         
         
 
-        return $this->render('postuler/new.html.twig', [
+        return $this->renderForm('postuler/new.html.twig', [
             'postuler' => $postuler,
             'form' => $form,
         ]);
@@ -97,7 +97,7 @@ class PostulerController extends AbstractController
             return $this->redirectToRoute('app_postuler_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('postuler/edit.html.twig', [
+        return $this->renderForm('postuler/edit.html.twig', [
             'postuler' => $postuler,
             'form' => $form,
         ]);
