@@ -30,9 +30,7 @@ class OpportuniteType extends AbstractType
                     'stage'=>'stage',
                     'travail'=>'travail'
                 ],
-                'attr'=>[
-                    'class'=>'form-control border-0'
-                ]
+               
                 ],
         
             )

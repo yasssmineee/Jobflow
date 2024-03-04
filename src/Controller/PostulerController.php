@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Postuler;
 use App\Form\PostulerType;
+use App\Repository\OpportuniteRepository;
 use App\Repository\PostulerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -25,8 +26,8 @@ class PostulerController extends AbstractController
         ]);
     }
 
-    #[Route('/userPostuler', name: 'app_postuler')]
-    public function userProjects(PostulerRepository $repository,Request $request): Response
+    #[Route('/userPostuler', name: 'app_postuler_user')]
+    public function condidatures(PostulerRepository $repository,Request $request): Response
     {
         $postulers = $repository->findBy(['user' => $this->getUser()]);
    
@@ -36,13 +37,44 @@ class PostulerController extends AbstractController
         ]);
     }
 
+    
+    #[Route('/societePostuler', name: 'app_postuler')]
+    public function societeCondi(PostulerRepository $repository,Request $request,OpportuniteRepository $oppRepository): Response
+    {
+       // Récupérer les opportunités associées à l'utilisateur actuel
+    $opportunites = $oppRepository->findBy(['user' => $this->getUser()]);
+    
+    // Récupérer les postulants pour ces opportunités
+    $postulers = [];
+    foreach ($opportunites as $opportunite) {
+        // Utiliser findBy() si vous vous attendez à récupérer plusieurs postulants
+        $postulants = $repository->findBy(['idOpportunite' => $opportunite->getId()]);
+        
+        // Ajouter les postulants trouvés à la liste
+        $postulers = array_merge($postulers, $postulants);
+    }
+    
+    // Vous pouvez également utiliser dump() pour afficher les postulants trouvés dans la console
+    dump($postulers);
+
+    return $this->render('postuler/index.html.twig', [
+        'postulers' => $postulers,
+    ]);
+    }
+
+
 
     #[Route('/new/{idOpportunite}', name: 'app_postuler_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager,ManagerRegistry $doctrine, SluggerInterface $slugger, $idOpportunite): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,ManagerRegistry $doctrine, SluggerInterface $slugger, $idOpportunite,OpportuniteRepository $oppRepository): Response
     {
         $postuler = new Postuler();
         $form = $this->createForm(PostulerType::class, $postuler);
         $postuler->setUser($this->getUser());
+        $opportunites = null;
+        $opportunites = $oppRepository->find(['id' => $idOpportunite]);
+        $postuler->setIdOpportunite($opportunites);
+
+
         $postuler->setStatus('pending');
         $postuler->setCreatedAt(new \DateTimeImmutable());
         
@@ -83,7 +115,7 @@ class PostulerController extends AbstractController
             $entityManager->persist($postuler);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_postuler', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_postuler_user', [], Response::HTTP_SEE_OTHER);
         }
 
    
@@ -114,7 +146,7 @@ class PostulerController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_postuler_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_postuler_user', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('postuler/edit.html.twig', [
@@ -155,6 +187,6 @@ class PostulerController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_postuler_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_postuler_user', [], Response::HTTP_SEE_OTHER);
     }
 }

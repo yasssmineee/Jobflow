@@ -95,7 +95,6 @@
                         
                     {% endif %}
                     {% if is_granted('ROLE_USER') and not is_granted('ROLE_SOCIETE')%}
-                <a href="{{ path('app_favorites') }}" class="nav-item nav-link ">Favorites</a>
             <a href="{{ path('app_postuler_user') }}" class="nav-item nav-link ">Mes condidatures</a>
 
                 

@@ -17,8 +17,12 @@ class PostulerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('motivationText',TextareaType::class, [
-                'label'=> '',            ]  
+            ->add('motivationText',TextareaType::class,
+            [
+                'attr'=>[
+                    'class'=>'form-control border-0'
+                ],
+                ]
             )
             ->add('cv', FileType::class, [
                 'constraints' => [
@@ -27,15 +31,15 @@ class PostulerType extends AbstractType
                     ]),
                 
                 ],
+                'attr'=>[
+                    'class'=>'form-control border-0'
+                ],
 
                 'mapped' => false,
                 'required' => false,
 
             ])
-            ->add('idOpportunite', EntityType::class, [
-                'class' => Opportunite::class,
-                'choice_label' => 'id',
-            ])
+          
         ;
     }
 
