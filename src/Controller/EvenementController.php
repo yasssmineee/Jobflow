@@ -71,10 +71,9 @@ public function index(Request $request, EvenementRepository $evenementRepository
     $stats = $evenementRepository->getStatistiques();
 
     return $this->render('evenement/index.html.twig', [
-        'evenements' => $evenements,
+        'evenement' => $evenements, // Assurez-vous que cela est correctement utilisé dans le template Twig
         'qrCodes' => $qrCodes,
         'stats' => $stats,
-        'evenement' => $evenement, // Assurez-vous que cela est correctement utilisé dans le template Twig
     ]);
 }
 
