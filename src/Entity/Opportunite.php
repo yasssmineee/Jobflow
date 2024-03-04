@@ -45,6 +45,9 @@ class Opportunite
     #[ORM\ManyToOne (inversedBy : 'Opportunites')]
     private ?Test $idtest = null;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private ?User $user = null;
+
     #[ORM\Column]
     private ?bool $isFavorite = null;
 
@@ -110,6 +113,18 @@ class Opportunite
     public function setIsFavorite(bool $isFavorite): static
     {
         $this->isFavorite = $isFavorite;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

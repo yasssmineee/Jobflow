@@ -88,6 +88,9 @@
                             <a href="" class="nav-item nav-link">Home</a>
                             <a href="" class="nav-item nav-link">About</a>
                             <a href="{{ path('app_opportunite_index') }}" class="nav-item nav-link ">Opportunities</a>
+                            {% if is_granted('ROLE_SOCIETE') %}
+                        <a href="{{ path('app_opportunite') }}" class="nav-item nav-link ">Mes opportunites</a>
+                    {% endif %}
                         <a href="{{ path('app_login') }}" class="nav-item nav-link " >Login</a>
 
                            

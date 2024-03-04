@@ -8,17 +8,20 @@
 
 {% endblock %}
 {% block body %}
-
+{% if is_granted('ROLE_SOCIETE') %}
        <a class="btn bg-danger m-2 text-white py-2 px-4 mt-4" href="{{ path('app_opportunite_new') }}">Create new</a>
+    {% endif %}
 
 
-                  <div class="container-fluid project py-5 my-5">
+<div class="container-fluid services py-5 my-5">
             <div class="container py-5">
                 <div class="text-center mx-auto pb-5 wow fadeIn" data-wow-delay=".3s" style="max-width: 600px;">
-                    <h5 class="text-primary">Our Opportunites</h5>
-                    <h1>Our Recently Completed Projects</h1>
+                    <h5 class="text-primary">Our Services</h5>
+                    <h1>Services Built Specifically For Your Business</h1>
                 </div>
-                <div class="row g-5">
+
+                
+                <div class="row g-5 services-inner">
                 {{ form_start(form, { 'attr': {'class': 'form-inline mb-4'} }) }}
 {{ form_widget(form.q, { 'value': q }) }} {# Add this line to pre-populate the search fields with the search parameters #}
 {{ form_widget(form.type, { 'value': type }) }}
@@ -27,22 +30,24 @@
 {{ form_end(form) }}
 
         {% for opportunite in opportunites %}
+                   
 
-                    <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay=".3s">
-                        <div class="project-item">
-                            <div class="project-img">
-                                <img src="{{asset('img/project-1.jpg')}}" class="img-fluid w-100 rounded" alt="">
-                                <div class="project-content">
-                                <img src="{{ qrCodes[opportunite.id] }}" alt="QR Code for Opportunite {{ opportunite.id }}">
+        <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay=".3s">
+        <div class="services-item bg-light">
+        <a href="{{ path('app_opportunite_show', {'id': opportunite.id}) }}">
+            <div class="p-4 text-center services-content">
+                <div class="services-content-icon">
+            <img src="{{ qrCodes[opportunite.id] }}" alt="QR Code for Opportunite {{ opportunite.id }}">
+                            <h4 class="mb-3"{{ opportunite.nom }}</h4>
+                    <p class="mb-4">{{ opportunite.type }}</p>
+                    <a href="{{ path('app_opportunite_show', {'id': opportunite.id}) }}" class="btn btn-secondary text-white px-5 py-3 rounded-pill">Read More</a>
+                </div>
+            </div>
+        </a>
+        </div>
 
-                                <a href="{{ path('app_opportunite_show', {'id': opportunite.id}) }}"  class="text-center">
-                                        <h4 class="text-secondary">{{ opportunite.nom }}</h4>
-                                        <p class="m-0 text-white">{{ opportunite.type }}</p>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    </div>
+                    
         
             {# <tr>
                 <td>{{ opportunite.id }}</td>

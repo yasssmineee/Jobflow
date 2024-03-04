@@ -25,15 +25,31 @@ class PostulerController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_postuler_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager,ManagerRegistry $doctrine, SluggerInterface $slugger): Response
+    #[Route('/userPostuler', name: 'app_postuler')]
+    public function userProjects(PostulerRepository $repository,Request $request): Response
+    {
+        $postulers = $repository->findBy(['user' => $this->getUser()]);
+   
+        
+        return $this->render('postuler/index.html.twig', [
+            'postulers' => $postulers,
+        ]);
+    }
+
+
+    #[Route('/new/{idOpportunite}', name: 'app_postuler_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager,ManagerRegistry $doctrine, SluggerInterface $slugger, $idOpportunite): Response
     {
         $postuler = new Postuler();
         $form = $this->createForm(PostulerType::class, $postuler);
+        $postuler->setUser($this->getUser());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $photo = $form->get('cv')->getData();
+            // get params idOpportunite 
+
+
 
 
 
