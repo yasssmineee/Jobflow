@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .card { margin-bottom: 20px; }
+    .card-img-top { max-width: 50%; height: 50%; }
+</style>
+
+<div class="example-wrapper">
+    {% for evenement in e %}
+    <div class="card">
+        <div class="card-header">
+            {{ evenement.titre }}
+        </div>
+        <div class="card-body">
+            <p class="card-text"><strong>Localisation:</strong> {{ evenement.localisation }}</p>
+            <p class="card-text"><strong>Date:</strong> {{ evenement.date|date('Y-m-d') }}</p>
+            <p class="card-text"><strong>Heure:</strong> {{ evenement.heure|date('H:i:s') }}</p>
+            <p class="card-text"><strong>Nbparticipant:</strong> {{ evenement.nbparticipant }}</p>
+            <p class="card-text"><strong>Image:</strong></p>
+            {% if evenement.image %}
+                <img src="{{ asset('assets/' ~ evenement.image) }}" class="card-img-top" alt="Event Image">
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+            
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

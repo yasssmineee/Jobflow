@@ -25,3 +25,5 @@ services:
     App\Service\MailerService: # Define MailerService explicitly
         arguments:
             $replyTo: 'rayenfarhani9@gmail.com' # Specify the replyTo email address here
+parameters:
+  images_directory: "%kernel.project_dir%/public/assets"

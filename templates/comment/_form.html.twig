@@ -1,0 +1,17 @@
+
+ 
+
+
+
+  <div class="coment-bottom  p-2 px-4">
+    {{ form_start(form) }}
+    <div class="d-flex flex-row add-comment-section mt-4 mb-4 " >
+        <img class="img-fluid img-responsive rounded-circle mr-2" >
+{{ form_widget(form.name, { 'attr': {'class': 'form-control mr-3', 'style': 'max-width: 180px; margin-right: 10px;', 'placeholder': 'Add your name'} }) }}
+        <img class="img-fluid img-responsive rounded-circle mr-2" >
+        <br>
+        {{ form_widget(form.contenu, { 'attr': {'class': 'form-control mr-3', 'placeholder': 'Add your comment', 'style': ' margin-right: 10px;'} }) }}
+        <button class="btn btn-primary" type="submit">{{ button_label|default('Add') }}</button>
+    </div>
+    {{ form_end(form) }}
+</div>

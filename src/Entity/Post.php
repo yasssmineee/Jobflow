@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Mime\Message;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
@@ -16,7 +15,6 @@ class Post
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -29,12 +27,18 @@ class Post
     #[ORM\Column(length: 500)]
     private ?string $contenu = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $tag = null;
+
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class)]
     private Collection $Comment;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private ?User $user = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?PostReactions $PostReactions = null;
 
     #[ORM\Column(length: 255)]
     private ?string $image = null;
@@ -114,32 +118,53 @@ class Post
 
         return $this;
     }
-      public function __toString(): string
+
+    public function getImage(): ?string
     {
-        return $this->name; // Or any other property you want to use as a string representation of the object
+        return $this->image;
     }
 
-      public function getImage(): ?string
-      {
-          return $this->image;
-      }
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
 
-      public function setImage(string $image): static
-      {
-          $this->image = $image;
+        return $this;
+    }
 
-          return $this;
-      }
-      public function getUser(): ?User
-      {
-          return $this->user;
-      }
-  
-      public function setUser(?User $user): self
-      {
-          $this->user = $user;
-  
-          return $this;
-      }
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getPostReactions(): ?PostReactions
+    {
+        return $this->PostReactions;
+    }
+
+    public function setPostReactions(?PostReactions $PostReactions): static
+    {
+        $this->PostReactions = $PostReactions;
+
+        return $this;
+    }
+
+    public function getTag(): ?string
+    {
+        return $this->tag;
+    }
+
+    public function setTag(?string $tag): static
+    {
+        $this->tag = $tag;
+
+        return $this;
+    }
 }
-?>
+

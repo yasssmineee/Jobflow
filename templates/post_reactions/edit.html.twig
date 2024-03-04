@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit PostReactions{% endblock %}
+
+{% block body %}
+    <h1>Edit PostReactions</h1>
+
+    {{ include('post_reactions/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_post_reactions_index') }}">back to list</a>
+
+    {{ include('post_reactions/_delete_form.html.twig') }}
+{% endblock %}

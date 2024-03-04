@@ -1,0 +1,68 @@
+{# post/new.html.twig #}
+
+{# Display error flash messages #}
+{% for flashError in app.flashes('error') %}
+    <div id="errorFlashMessage" class="alert alert-danger fade show" role="alert">
+        {{ flashError }}
+    </div>
+{% endfor %}
+
+{# Form for adding a new post #}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Post</div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                    <div class="form-group row">
+                        <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
+                        <div class="col-md-6">
+                            {{ form_widget(form.name, { 'attr': {'class': 'form-control', 'placeholder': 'Enter post name', 'id': 'name'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="contenu" class="col-md-4 col-form-label text-md-right">Content</label>
+                        <div class="col-md-6">
+                            {{ form_widget(form.contenu, { 'attr': {'class': 'form-control', 'placeholder': 'Enter post content', 'id': 'contenu'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="tag" class="col-md-4 col-form-label text-md-right">tag</label>
+                        <div class="col-md-6">
+                            {{ form_widget(form.tag, { 'attr': {'class': 'form-control', 'placeholder': 'Enter post tag', 'id': 'contenu'} }) }}
+                        </div>
+                    </div>
+                       <div class="form-group row">
+                        <label for="image" class="col-md-4 col-form-label text-md-right">Image</label>
+                        <div class="col-md-6">
+                            {{ form_widget(form.image, { 'attr': {'class': 'form-control-file', 'id': 'image'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group row mb-0">
+                        <div class="col-md-6 offset-md-4">
+                            <button type="submit" class="btn btn-primary">Add Post</button>
+                        </div>
+                    </div>
+                  
+                    {{ form_end(form) }}
+                </div>
+                    <a href="{{ path('app_post_index') }}">back to list</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{# JavaScript for auto-dismissing error flash message after 4 seconds #}
+<script>
+    // Auto-dismiss error flash message after 4 seconds
+    window.onload = function() {
+        setTimeout(function() {
+            var errorFlashMessage = document.getElementById('errorFlashMessage');
+            if (errorFlashMessage) {
+                errorFlashMessage.style.display = 'none';
+            }
+        }, 4000); // 4 seconds
+    };
+</script>

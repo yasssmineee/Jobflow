@@ -1,0 +1,391 @@
+{% extends 'base.html.twig' %}
+{% block header %}   <div class="collapse navbar-collapse bg-transparent" id="navbarCollapse">
+                        <div class="navbar-nav ms-auto mx-xl-auto p-0">
+                            <a href="index.html" class="nav-item nav-link active text-secondary">Home</a>
+                            <a href="about.html" class="nav-item nav-link">About</a>
+                            <a href="service.html" class="nav-item nav-link">Services</a>
+                            <a href="project.html" class="nav-item nav-link">Projects</a>
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                                <div class="dropdown-menu rounded">
+                               <a href="http://127.0.0.1:8000/post/" class="nav-item nav-link">posts</a>
+                                     <a href="http://127.0.0.1:8000/" class="dropdown-item">Events</a>
+                                    <a href="project.html" class="nav-item nav-link">Projects</a>
+                                    <a href="team.html" class="dropdown-item">Our Team</a>
+                                    <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                                    <a href="404.html" class="dropdown-item">404 Page</a>
+                                </div>
+                            </div>
+                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        </div>
+                    </div> {% endblock %}
+
+{% block body %}
+ <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+{% for flashSuccess in app.flashes('success') %}
+    <div id="successMessage" class="alert alert-success" role="alert">
+        {{ flashSuccess }}
+    </div>
+{% endfor %}
+
+ <ul class="list-inline tag-list">
+    {% for tag in tags %}
+        <li class="list-inline-item tag-item">
+            <a href="{{ path('tags', {'tag': tag}) }}" class="btn btn-outline-primary tag-link">{{ tag }}</a>
+        </li>
+    {% endfor %}
+</ul>
+
+<style>
+    .tag-list {
+        list-style-type: none;
+        margin-top: 60px;
+        text-align: center;
+    }
+
+    .tag-item {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .tag-link {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #1842b6 !important;
+        border-radius: 8px;
+        color: #fff;
+        width: 134px;
+        height: 54px;
+        text-decoration: none;
+    }
+
+    .tag-link:hover {
+        background-color: #0b2e7d;
+    }
+    .pagination-container {
+    margin-top: 20px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination li button {
+    background-color: #1842b6;
+    border: 1px solid #1842b6;
+    color: #fff;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination li.active button {
+    background-color: #fff;
+    border-color: #1842b6;
+    color: #1842b6;
+}
+
+.pagination li.disabled button {
+    pointer-events: none;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+.pagination li .page-link.prev,
+.pagination li .page-link.next {
+    background-color: #fff;
+    border: 1px solid #1842b6;
+    color: #1842b6;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+#searchContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center horizontally */
+    height: 100vh; /* Full viewport height */
+}
+
+#searchForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#searchInput {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-bottom: 10px; /* Add margin to separate input and button */
+    width: 300px; /* Adjust width as needed */
+}
+
+#searchInput:focus {
+    outline: none;
+    border-color: #1842b6;
+}
+
+#searchInput::placeholder {
+    color: #aaa;
+}
+
+#searchInput:focus::placeholder {
+    color: transparent;
+}
+
+button[type="submit"] {
+    background-color: #1842b6;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #2c5aa8;
+}
+
+#menuContainer {
+    position: relative;
+}
+
+#menuIcon {
+    background-color: #1842b6;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.menu {
+    position: absolute;
+    top: 100%; /* Position below the menu icon */
+    left: 0;
+    border: 1px solid ;
+    border-radius: 5px;
+    list-style-type: none;
+    padding: 10px;
+    box-shadow: 0 2px 4px;
+    z-index: 1000; /* Ensure the menu is above other elements */
+}
+
+.menu li {
+    margin-bottom: 5px;
+}
+
+.menu button[type="submit"] {
+    background-color: #1842b6;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.menu button[type="submit"]:hover {
+    background-color: #2c5aa8;
+}
+#menuContainer {
+    display: flex;
+    align-items: center;
+}
+
+.menu li {
+    margin-right: 10px; /* Adjust margin between buttons */
+}
+
+
+</style>
+
+
+  
+
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById("menu");
+            menu.style.display = (menu.style.display === "none") ? "block" : "none";
+        }
+    </script>
+
+
+ 
+ 
+<div class="container-fluid blog py-5 my-5">
+<div class="container">
+    <!-- Search Form -->
+    <div class="search-form">
+        <form id="searchForm" action="{{ path('search_post') }}" method="GET" class="input-group">
+            <input type="text" id="searchInput" name="search" class="form-control search-input" placeholder="Search by post name" onkeyup="searchPosts()">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary search-btn">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <form action="{{ path('tree_post') }}" method="GET">
+            <button type="submit" class="btn btn-outline-primary">Most Liked</button>
+        </form>
+        <form action="{{ path('tree_postByDate') }}" method="GET">
+            <button type="submit" class="btn btn-outline-primary">Recent</button>
+        </form>
+    </div>
+</div>
+  <style>
+        /* Custom CSS */
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .search-form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .search-input {
+            width: 60%;
+            border-radius: 5px 0 0 5px;
+        }
+        .search-btn {
+            border-radius: 0 5px 5px 0;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .action-buttons form {
+            margin-right: 10px;
+        }
+        
+    </style>
+    <style>
+    /* Tag List Styles */
+    .post-tags {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .tag-item {
+        margin: 5px;
+    }
+
+    .tag-link {
+        padding: 8px 16px;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 20px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .tag-link:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+ <li>
+           
+ 
+
+<div id="searchResults"></div>
+
+ 
+<div id="searchResults">
+</div>
+    <div class="container py-5">
+       
+        <div class="row justify-content-center">
+            {% for post in pagination %}
+            <div class="col-lg-4 wow fadeIn" data-wow-delay=".3s">
+                <div class="blog-item position-relative bg-light rounded">
+                    <img src="{{ asset('assets/' ~ post.image) }}" class="img-fluid w-100 rounded-top" alt="">
+                    <span class="position-absolute px-4 py-3 bg-primary text-white rounded" style="top: -28px; right: 20px;">{{ post.tag }}</span>
+                    
+                    <div class="blog-content text-center position-relative px-3" style="margin-top: -25px;">
+                        <img src="{{ asset('assets/admin.jpg') }}" class="img-fluid rounded-circle border border-4 border-white mb-3" alt="">
+                        <h5 class="">{{ post.name }}</h5>
+                        <span class="text-secondary">{{ post.date ? post.date|date('Y-m-d') : '' }}</span>
+                        <p class="py-2">{{ post.contenu }}</p>
+                       
+                    </div>
+                               <button class="btn">    <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover">
+        <i class="fa fa-thumbs-up g-pos-rel g-top-1 g-mr-3"></i>{{ post.getPostReactions().getLikes() }}
+    </a>   </button class="btn">
+   <button class="btn">
+    <li class="list-inline-item g-mr-20">
+        <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover">
+            <i class="fa fa-thumbs-down g-pos-rel g-top-1 g-mr-3"></i>{{ post.getPostReactions().getDislike() }}
+        </a>
+    </li>
+</button>
+
+                    
+                    <div class="blog-coment d-flex justify-content-between px-4 py-2 border bg-primary rounded-bottom">
+                        <a href="{{ path('app_post_edit', {'id': post.id}) }}" class="text-white"><small><i class="fas fa-share me-2 text-secondary"></i> edit</small></a>
+                        <a href="{{ path('app_post_show', {'id': post.id}) }}" class="text-white"><small><i class="fa fa-comments me-2 text-secondary"></i>{{ post.getComment()|length }}Comments</small></a>
+                    </div>
+        
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="pagination-container">
+        {{ knp_pagination_render(pagination) }}
+</div>
+
+</div>
+
+
+<a href="{{ path('app_post_new') }}" class="btn btn-primary">Create New</a>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function searchPosts() {
+        var postsContainer = document.querySelector('.row.justify-content-center');
+        postsContainer.innerHTML = '';
+
+        var searchInput = encodeURIComponent(document.getElementById('searchInput').value); // Encode the search input
+        var searchResultsContainer = document.getElementById('searchResults');
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                searchResultsContainer.innerHTML = this.responseText;
+            }
+        };
+        xhr.open("GET", "{{ path('search_posts') }}?search=" + searchInput, true);
+        xhr.send();
+    }
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PostReactions index{% endblock %}
+
+{% block body %}
+    <h1>PostReactions index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Likes</th>
+                <th>Dislike</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for post_reaction in post_reactions %}
+            <tr>
+                <td>{{ post_reaction.id }}</td>
+                <td>{{ post_reaction.likes }}</td>
+                <td>{{ post_reaction.dislike }}</td>
+                <td>
+                    <a href="{{ path('app_post_reactions_show', {'id': post_reaction.id}) }}">show</a>
+                    <a href="{{ path('app_post_reactions_edit', {'id': post_reaction.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_post_reactions_new') }}">Create new</a>
+{% endblock %}
