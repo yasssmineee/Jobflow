@@ -13,6 +13,8 @@
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.0",
         "easycorp/easyadmin-bundle": "^4.9",
+        "endroid/qr-code": "^5.0",
+        "endroid/qr-code-bundle": "^5.0",
         "hwi/oauth-bundle": "^2.2",
         "knplabs/knp-paginator-bundle": "^5.9",
         "knpuniversity/oauth2-client-bundle": "^2.18",
@@ -62,7 +64,8 @@
             "composer/package-versions-deprecated": true,
             "php-http/discovery": true,
             "symfony/flex": true,
-            "symfony/runtime": true
+            "symfony/runtime": true,
+            "endroid/installer": true
         },
         "optimize-autoloader": true,
         "preferred-install": {

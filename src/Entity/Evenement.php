@@ -38,6 +38,7 @@ class Evenement
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotNull(message: "La date ne peut pas être vide")]
+    #[Assert\GreaterThanOrEqual("today", message: "Veuillez choisir une date dans le présent ou dans le futur.")]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
@@ -51,16 +52,12 @@ class Evenement
     private ?int $nb_participant = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank(message: "Le chemin de l'image ne peut pas être vide")]
+    
     #[Assert\Length(max: 255, maxMessage: "Le chemin de l'image ne peut pas dépasser {{ limit }} caractères")]
     private ?string $image = null;
 
     #[ORM\ManyToMany(targetEntity: Sponsor::class, mappedBy: 'evenements')]
     private Collection $sponsors;
-
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private $user;
 
     public function __construct()
     {
@@ -170,16 +167,4 @@ class Evenement
 
         return $this;
     }
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
 }
-?>

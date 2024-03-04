@@ -45,4 +45,31 @@ class PostRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+public function findByTitleLike(string $query): array
+{
+    return $this->createQueryBuilder('p')
+        ->andWhere('p.name LIKE :query')
+        ->setParameter('query', '%' . $query . '%')
+        ->getQuery()
+        ->getResult();
+}
+public function findBySearchQuery($query)
+{
+    return $this->createQueryBuilder('p')
+    ->where('p.name LIKE :query')
+    ->setParameter('query', '%'.$query.'%')
+    ->getQuery()
+    ->getResult();
+
+}
+public function findAllWithReactions(): array
+{
+    return $this->createQueryBuilder('p')
+        ->leftJoin('p.PostReactions', 'pr') // Assuming 'postReactions' is the name of the relationship
+        ->addSelect('pr') // Select the reactions
+        ->getQuery()
+        ->getResult();
+}
+
+
 }

@@ -45,4 +45,13 @@ class EvenementRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+public function getStatistiques()
+    {
+        return $this->createQueryBuilder('e')
+        ->select('e.titre as titre, e.localisation as localisation, count(e.id) as count')
+        ->groupBy('e.titre, e.localisation')
+        ->getQuery()
+        ->getResult();
+    }
+    
 }
