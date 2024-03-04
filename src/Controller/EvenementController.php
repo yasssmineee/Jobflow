@@ -18,6 +18,7 @@ use App\Repository\EvenementRepository;
 
 
 
+#[Route('/evenement')]
 
 
 class EvenementController extends AbstractController

@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\Security;
 use App\Entity\Societe;
 class HomeController extends AbstractController
 {
-    #[Route('/home', name: 'app_home')]
+    #[Route('/', name: 'app_home')]
     public function index(Security $security): Response
     {
         $user = $security->getUser();

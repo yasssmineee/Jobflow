@@ -88,9 +88,9 @@ class OpportuniteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($opportunite);
             $entityManager->flush();
-            $this->addFlash('success', 'User activated successfully');
+            $this->addFlash('success', 'Created  successfully!');
 
-            return $this->redirectToRoute('app_opportunite_new', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_opportunite_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('opportunite/new.html.twig', [
