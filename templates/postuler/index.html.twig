@@ -27,8 +27,19 @@
                 <td>{{ postuler.createdAt ? postuler.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ postuler.status }}</td>
                 <td>
-                    <a href="{{ path('app_postuler_show', {'id': postuler.id}) }}">show</a>
-                    <a href="{{ path('app_postuler_edit', {'id': postuler.id}) }}">edit</a>
+                    {% if is_granted('ROLE_USER') and not is_granted('ROLE_SOCIETE')%}
+
+                <a href="{{ path('app_postuler_edit', {'id': postuler.id}) }}">edit</a>
+            
+                {{ include('postuler/_delete_form.html.twig') }}
+            {% endif %}
+            
+            {% if is_granted('ROLE_SOCIETE')%}
+            
+            <a href="{{ path('app_postuler_accept', {'id': postuler.id}) }}">Accept</a>
+            
+            <a href="{{ path('app_postuler_reject', {'id': postuler.id}) }}">Decline</a>
+            {% endif %}
                 </td>
             </tr>
         {% else %}

@@ -43,6 +43,10 @@ class PostulerController extends AbstractController
         $postuler = new Postuler();
         $form = $this->createForm(PostulerType::class, $postuler);
         $postuler->setUser($this->getUser());
+        $postuler->setStatus('pending');
+        $postuler->setCreatedAt(new \DateTimeImmutable());
+        
+        
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -79,7 +83,7 @@ class PostulerController extends AbstractController
             $entityManager->persist($postuler);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_postuler_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_postuler', [], Response::HTTP_SEE_OTHER);
         }
 
    
@@ -118,6 +122,30 @@ class PostulerController extends AbstractController
             'form' => $form,
         ]);
     }
+
+
+    #[Route('/{id}/accept', name: 'app_postuler_accept', methods: ['GET', 'POST'])]
+    public function accept($id, PostulerRepository $repository,EntityManagerInterface $entityManager): Response
+    {
+        $req = $repository->find($id);
+        $req->setStatus("APPROVED");
+        $entityManager->persist($req);
+    
+        // Utiliser flush() pour exécuter réellement la requête et enregistrer les modifications dans la base de données
+        $entityManager->flush();        return $this->redirectToRoute("app_postuler");
+    }
+
+    #[Route('/{id}/reject', name: 'app_postuler_reject', methods: ['GET', 'POST'])]
+    public function reject($id, PostulerRepository $repository,EntityManagerInterface $entityManager): Response
+    {
+        $req = $repository->find($id);
+        $req->setStatus("REJECTED");
+        $entityManager->persist($req);
+    
+        // Utiliser flush() pour exécuter réellement la requête et enregistrer les modifications dans la base de données
+        $entityManager->flush();        return $this->redirectToRoute("app_postuler");
+    }
+
 
     #[Route('/{id}', name: 'app_postuler_delete', methods: ['POST'])]
     public function delete(Request $request, Postuler $postuler, EntityManagerInterface $entityManager): Response

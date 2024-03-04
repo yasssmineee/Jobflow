@@ -31,8 +31,8 @@
 
 <a href="{{ path('app_postuler_new', {'idOpportunite': opportunite.id}) }}" class="btn bg-danger m-2 text-white py-2 px-4 mt-4">Postuler</a>
 
-{% if is_granted('ROLE_SOCIETE') %}
-<a href="{{ path('app_opportunite_edit', {'id': opportunite.id}) }}">edit</a> 
+{% if is_granted('ROLE_SOCIETE') and app.user is defined and app.user == opportunite.user %}
+<a href="{{ path('app_opportunite_edit', {'id': opportunite.id}) }}">Edit</a> 
 {{ include('opportunite/_delete_form.html.twig') }}
 
    {% endif %}
