@@ -30,7 +30,15 @@ class RegistrationController extends AbstractController
                     
                 )
             );
-            
+              // Check if 'ROLE_SOCIETE' is included in user roles
+    if (in_array('ROLE_SOCIETE', $user->getRoles(), true)) {
+        // If 'ROLE_ADMIN' is present, maintain it; otherwise, set only 'ROLE_SOCIETE'
+        if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+            $user->setRoles(['ROLE_ADMIN', 'ROLE_SOCIETE']);
+        } else {
+            $user->setRoles(['ROLE_SOCIETE']);
+        }
+    }
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -39,7 +47,7 @@ class RegistrationController extends AbstractController
             // Check if 'ROLE_SOCIETE' is included in user roles
             if (in_array('ROLE_SOCIETE', $user->getRoles(), true)) {
                 // Redirect to 'app_societe_new' route
-                return $this->redirectToRoute('app_societe_new');
+                return $this->redirectToRoute('app_societe_new', ['id' => $user->getId()]);
             }
 
             // Redirect to another route or return a response

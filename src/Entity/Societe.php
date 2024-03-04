@@ -42,6 +42,9 @@ class Societe
     #[ORM\OneToOne(targetEntity: User::class, inversedBy: "societe")]
     #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
     private $user;
+
+    #[ORM\Column(name: "user_id", type: "integer", nullable: true)]
+    private ?int $user_id = null;
     public function getId(): ?int
     {
         return $this->id;
@@ -127,7 +130,17 @@ class Societe
    
    
 
-    public function getUser(): ?User
+    public function getUserId(): ?int
+{
+    return $this->user_id;
+}
+    public function setUserId(?int $userId): self
+    {
+        $this->user_id = $userId;
+    
+        return $this;
+    }
+      public function getUser(): ?User
     {
         return $this->user;
     }

@@ -49,7 +49,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: "boolean")]
     private $status;
-
     #[ORM\OneToOne(targetEntity: Societe::class, mappedBy: "user")]
     private $societe;
 
