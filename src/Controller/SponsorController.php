@@ -13,7 +13,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
 class SponsorController extends AbstractController
 {
     private $entityManager;
@@ -24,7 +23,7 @@ class SponsorController extends AbstractController
     }
    
 
-    #[Route('/sponsor', name: 'app_sponsor')]
+    #[Route('/', name: 'app_sponsor')]
     public function sponsor(Request $request, SponsorRepository $sponsorRepository): Response
     {
         // Récupérer le terme de recherche de la requête HTTP

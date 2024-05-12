@@ -1,8 +1,14 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
 app_search:
   path: /search
-  controller: App\Controller\EvenementController::search
+  controller: 'App\Controller\EvenementController::search'
   methods: [GET]
-  
+
+app_sponsor:
+  path: /sponsor
+  controller: 'App\Controller\SponsorController::sponsor'
+  methods: [GET]
+
+app_add_sponsor:
+  path: /add_sponsor
+  controller: 'App\Controller\SponsorController::Addsponsor'
+  methods: [GET]

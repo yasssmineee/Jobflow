@@ -1,5 +1,8 @@
-{% extends 'base.html.twig' %}
-
+{% extends 'home/userlogin.html.twig' %}
+    {% block header %}
+        <!-- Include the header block from the base template -->
+        {{ parent() }}
+    {% endblock %}
 {% block title %}Hello EvenementController!{% endblock %}
 
 {% block body %}
@@ -24,7 +27,7 @@
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Incluez jQuery si ce n'est pas déjà fait -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+Elyes Béjaoui
 <script>
     $(document).ready(function() {
         $('#search').on('input', function() {
@@ -47,7 +50,7 @@
                                             <p class="card-text"><strong>Heure:</strong> {{ evenement.heure|date('H:i:s') }}</p>
                                             <p class="card-text"><strong>Nbparticipant:</strong> ${evenement.nbparticipant}</p>
                                             <p class="card-text"><strong>Image:</strong></p>
-                                            <img src="{{ asset('assets/') }}${evenement.image}" class="card-img-top" alt="Event Image">
+                                            <img src="{{ asset('uploads/') }}${evenement.image}" class="card-img-top" alt="Event Image">
                                         </div>
                                         <div class="card-footer">
                                             <a href="{{ path('app_supp_evenement', {'id': evenement.id}) }}" class="btn btn-danger">Supprimer</a>
