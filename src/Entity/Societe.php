@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\SocieteRepository;
@@ -39,9 +38,6 @@ class Societe
     #[Assert\NotBlank(message: "secteur ne doit pas etre vide ")]
     private ?string $secteur = null;
 
-    #[ORM\OneToOne(targetEntity: User::class, inversedBy: "societe")]
-    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
-    private $user;
     public function getId(): ?int
     {
         return $this->id;
@@ -123,19 +119,5 @@ class Societe
         // Choose one of the properties as the string representation
         // For example, I'm using 'nom' property here
         return $this->nom;
-    }
-   
-   
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
     }
 }

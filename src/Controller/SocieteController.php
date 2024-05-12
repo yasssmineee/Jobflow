@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Societe;
-use App\Entity\User;
 use App\Form\SocieteType;
 use App\Repository\SocieteRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,7 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\MailerService;
-use Symfony\Component\Security\Core\Security;
 
 #[Route('/societe')]
 class SocieteController extends AbstractController
@@ -60,32 +58,28 @@ class SocieteController extends AbstractController
         'searchTerm' => $searchTerm,
     ]);
 }
-#[Route('/new', name: 'app_societe_new', methods: ['GET', 'POST'])]
-public function new(Request $request, EntityManagerInterface $entityManager, MailerService $mailer): Response
-{
-    $userId = $request->get('id'); // Retrieve user ID from the request parameter
+    #[Route('/new', name: 'app_societe_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager,MailerService $mailer): Response
+    {
+        $societe = new Societe();
+        $form = $this->createForm(SocieteType::class, $societe);
+        $form->handleRequest($request);
 
-    $user = $this->getDoctrine()->getRepository(User::class)->find($userId); // Retrieve the user entity using the user ID
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($societe);
+            $entityManager->flush();
 
-    $societe = new Societe();
-    $societe->setUser($user); // Set the user entity as the association
+            return $this->redirectToRoute('app_societe_index', [], Response::HTTP_SEE_OTHER);
+            $mailer->sendEmail('rayenfarhani9@gmail.com.com', 'Email content', 'Email subject'); // Assuming you want to send an email after persisting the entity
 
-    $form = $this->createForm(SocieteType::class, $societe);
-    $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager->persist($societe);
-        $entityManager->flush();
+        }
 
-        // Redirect to a specific route after persisting the entity
-        return $this->redirectToRoute('app_login1');
+        return $this->renderForm('societe/new.html.twig', [
+            'societe' => $societe,
+            'form' => $form,
+        ]);
     }
-
-    return $this->renderForm('societe/new.html.twig', [
-        'societe' => $societe,
-        'form' => $form,
-    ]);
-}
 
     #[Route('/{id}', name: 'app_societe_show', methods: ['GET'])]
     public function show(Societe $societe): Response
@@ -112,23 +106,7 @@ public function new(Request $request, EntityManagerInterface $entityManager, Mai
             'form' => $form,
         ]);
     }
-    #[Route('/{id}/societe/edit', name: 'app_psociete_edit', methods: ['GET', 'POST'])]
-    public function editp(Request $request, Societe $societe, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(SocieteType::class, $societe);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('profile');
-        }
-
-        return $this->renderForm('profile/editprofilesoc.html.twig', [
-            'societe' => $societe,
-            'form' => $form,
-        ]);
-    }
     #[Route('/{id}', name: 'app_societe_delete', methods: ['POST'])]
     public function delete(Request $request, Societe $societe, EntityManagerInterface $entityManager): Response
     {

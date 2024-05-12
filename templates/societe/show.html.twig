@@ -1,8 +1,11 @@
-{% extends 'base.html.twig' %}
-
+{% extends 'home/societelogin.html.twig' %}
+{% block header %}
+    <!-- Include the header block from the base template -->
+    {{ parent() }}
+{% endblock %}
 {% block title %}Societe{% endblock %}
 
-{% block content %}
+{% block body %}
     <h1>Societe</h1>
 
     <table class="table">
