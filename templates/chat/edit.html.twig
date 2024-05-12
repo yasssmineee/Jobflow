@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-
+{% extends 'home/userlogin.html.twig' %}
+{% block header %}
+    <!-- Include the header block from the base template -->
+    {{ parent() }}
+{% endblock %}
 <title>Edit Chat</title>
 
 {% block body %}

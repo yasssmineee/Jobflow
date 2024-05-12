@@ -38,7 +38,7 @@ class ChatController extends AbstractController
 
         return $this->render('chat/new.html.twig', [
             'chat' => $chat,
-            'form' => $form,
+            'form' => $form->createView(),
             'chats' => $chatRepository->findAll(),
         
         ]);

@@ -1,20 +1,21 @@
-<!DOCTYPE html>
+{% extends 'home/userlogin.html.twig' %}
+{% block header %}
+    <!-- Include the header block from the base template -->
+    {{ parent() }}
+{% endblock %}
+{% block body %}
+
 <html>
 <head>
     <title>New Chat</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
-        }
+     
         .container {
             max-width: 800px;
             margin: 0 auto;
-            background-color: #fff;
             border-radius: 10px;
             padding: 20px;
+            padding-top:80px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         h1 {
@@ -90,14 +91,8 @@
 <div class="container">
 
     <h1>New Chat</h1>
+ {{ include('chat/_form.html.twig') }}
 
-    <form action="{{ path('app_chat_new') }}" method="post">
-        {{ form_start(form) }}
-        {{ form_row(form.username) }}
-        {{ form_row(form.content) }}
-        <button type="submit">Send</button>
-        {{ form_end(form) }}
-    </form>
 
     <div class="chat-container">
         {% if chats is not empty %}
@@ -118,5 +113,7 @@
 
 </div>
 
+
 </body>
 </html>
+{% endblock %}

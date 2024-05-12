@@ -28,6 +28,7 @@ app_chat_edit:
     methods: ['GET', 'POST']
 
 app_chat_new:
-    path: /chat/new
+    path: /new
     controller: App\Controller\ChatController::new
     methods: ['GET', 'POST']
+
