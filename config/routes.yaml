@@ -5,3 +5,4 @@ app_search:
   path: /search
   controller: App\Controller\EvenementController::search
   methods: [GET]
+  

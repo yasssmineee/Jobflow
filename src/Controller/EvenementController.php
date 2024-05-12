@@ -34,49 +34,49 @@ private $qrCodeServices;
     
 
     #[Route('/event', name: 'app_evenement')]
-public function index(Request $request, EvenementRepository $evenementRepository): Response
-{ 
-    // Récupérer tous les événements
-    $evenements = $evenementRepository->findAll();
-
-    // Vérifier si le formulaire de tri a été soumis
-    if ($request->isMethod('POST')) {
-        $sortCriteria = $request->request->get('sort');
-
-        // Trier les événements en fonction du critère de tri sélectionné
-        if ($sortCriteria === 'titre') {
-            usort($evenements, function($a, $b) {
-                return $a->getTitre() <=> $b->getTitre();
-            });
-        } elseif ($sortCriteria === 'localisation') {
-            usort($evenements, function($a, $b) {
-                return $a->getLocalisation() <=> $b->getLocalisation();
-            });
-        } elseif ($sortCriteria === 'nbparticipant') {
-            usort($evenements, function($a, $b) {
-                return $a->getNbParticipant() <=> $b->getNbParticipant();
-            });
+    public function index(Request $request, EvenementRepository $evenementRepository): Response
+    { 
+        // Récupérer tous les événements
+        $evenements = $evenementRepository->findAll();
+    
+        // Vérifier si le formulaire de tri a été soumis
+        if ($request->isMethod('POST')) {
+            $sortCriteria = $request->request->get('sort');
+    
+            // Trier les événements en fonction du critère de tri sélectionné
+            if ($sortCriteria === 'titre') {
+                usort($evenements, function($a, $b) {
+                    return $a->getTitre() <=> $b->getTitre();
+                });
+            } elseif ($sortCriteria === 'localisation') {
+                usort($evenements, function($a, $b) {
+                    return $a->getLocalisation() <=> $b->getLocalisation();
+                });
+            } elseif ($sortCriteria === 'nbparticipant') {
+                usort($evenements, function($a, $b) {
+                    return $a->getNbParticipant() <=> $b->getNbParticipant();
+                });
+            }
+            
+            // Ajoutez ici d'autres critères de tri si nécessaire
+        }
+    
+        // Générer les QR codes pour chaque événement
+        $qrCodes = [];
+        foreach ($evenements as $evenement) {
+            $qrCodes[$evenement->getId()] = $this->qrCodeServices->qrcode($evenement->getId());
         }
         
-        // Ajoutez ici d'autres critères de tri si nécessaire
-    }
-
-    // Générer les QR codes pour chaque événement
-    $qrCodes = [];
-    foreach ($evenements as $evenement) {
-        $qrCodes[$evenement->getId()] = $this->qrCodeServices->qrcode($evenement->getId());
-    }
+        // Récupérer les statistiques sur les titres des événements
+        $stats = $evenementRepository->getStatistiques();
     
-    // Récupérer les statistiques sur les titres des événements
-    $stats = $evenementRepository->getStatistiques();
-
-    return $this->render('evenement/index.html.twig', [
-        'evenements' => $evenements,
-        'qrCodes' => $qrCodes,
-        'stats' => $stats,
-        'evenement' => $evenement, // Assurez-vous que cela est correctement utilisé dans le template Twig
-    ]);
-}
+        return $this->render('evenement/index.html.twig', [
+            'evenements' => $evenements,
+            'qrCodes' => $qrCodes,
+            'stats' => $stats,
+            'evenement' => $evenement, // Assurez-vous que cela est correctement utilisé dans le template Twig
+        ]);
+    }
 
     
 

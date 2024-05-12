@@ -50,6 +50,9 @@
     "endroid/qr-code-bundle": {
         "version": "5.0.1"
     },
+    "endroid/qrcode-bundle": {
+        "version": "5.0.1"
+    },
     "google/recaptcha": {
         "version": "1.3",
         "recipe": {

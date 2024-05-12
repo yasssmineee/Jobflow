@@ -15,6 +15,7 @@
         "easycorp/easyadmin-bundle": "^4.9",
         "endroid/qr-code": "^5.0",
         "endroid/qr-code-bundle": "^5.0",
+        "endroid/qrcode-bundle": "^5.0",
         "hwi/oauth-bundle": "^2.2",
         "knplabs/knp-paginator-bundle": "^5.9",
         "knpuniversity/oauth2-client-bundle": "^2.18",
