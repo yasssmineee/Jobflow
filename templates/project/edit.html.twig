@@ -1,0 +1,66 @@
+{% extends 'home/userlogin.html.twig' %}
+    {% block header %}
+        <!-- Include the header block from the base template -->
+        {{ parent() }}
+    {% endblock %}
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Edit Project</h1>
+
+        {{ include('project/_form.html.twig', {'button_label': 'Update'}) }}
+
+        <a href="{{ path('app_project_index') }}">Back to List</a>
+
+        {{ include('project/_delete_form.html.twig') }}
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4267b2; /* Messenger blue */
+        }
+        .chat-container {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow-y: auto;
+            max-height: 400px;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #f0f0f0; /* Messenger chat background */
+        }
+        .chat-message {
+            background-color: #fff; /* Messenger message bubble color */
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            max-width: 70%;
+            word-wrap: break-word;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+        }
+        .chat-message .username {
+            color: #4267b2; /* Messenger username color */
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .no-records {
+            text-align: center;
+            color: #999;
+        }
+        .create-new-link, .back-to-list {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #4267b2; /* Messenger blue */
+            text-decoration: none;
+        }
+        .create-new-link:hover, .back-to-list:hover {
+            text-decoration: underline;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        form input[type="text"], form textarea {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        form button {
+            background-color: #4267b2; /* Messenger blue */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+        form button:hover {
+            background-color: #344e86; /* Darker Messenger blue */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>New Chat</h1>
+
+    <form action="{{ path('app_chat_new') }}" method="post">
+        {{ form_start(form) }}
+        {{ form_row(form.username) }}
+        {{ form_row(form.content) }}
+        <button type="submit">Send</button>
+        {{ form_end(form) }}
+    </form>
+
+    <div class="chat-container">
+        {% if chats is not empty %}
+            {% for chat in chats %}
+                <div class="chat-message">
+                    <span class="username">{{ chat.username }}</span><br>
+                    {{ chat.content }}
+                </div>
+            {% else %}
+                <div class="no-records">No chat entries found</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <a class="create-new-link" href="{{ path('app_chat_new') }}">Create New</a>
+
+    <a class="back-to-list" href="{{ path('app_chat_index') }}">Back to List</a>
+
+</div>
+
+</body>
+</html>

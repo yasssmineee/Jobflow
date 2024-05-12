@@ -1,0 +1,72 @@
+{% extends 'home/userlogin.html.twig' %}
+    {% block header %}
+        <!-- Include the header block from the base template -->
+        {{ parent() }}
+    {% endblock %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        .project-details {
+            margin-bottom: 10px;
+        }
+        .project-details span {
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Project History</h1>
+        <ul>
+            {% for project in projects %}
+                <li>
+                    <div class="project-details">
+                        <span>ID:</span> {{ project.id }}<br>
+                        <span>Name:</span> {{ project.prname }}<br>
+                        <span>Description:</span> {{ project.description }}<br>
+                        {% if project.stdate is not null %}
+                            <span>Start Date:</span> {{ project.stdate|date('Y-m-d') }}<br>
+                        {% endif %}
+                        {% if project.enddate is not null %}
+                            <span>End Date:</span> {{ project.enddate|date('Y-m-d') }}<br>
+                        {% endif %}
+                        {# Add other project details as needed #}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

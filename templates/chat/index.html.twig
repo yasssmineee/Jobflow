@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat index</title>
+</head>
+<body>
+
+{% block body %}
+    <h1>Chat index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Content</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for chat in chats %}
+            <tr>
+                <td>{{ chat.content }}</td>
+                <td>
+                    <a href="{{ path('app_chat_show', {'id': chat.id}) }}">show</a>
+                    <a href="{{ path('app_chat_edit', {'id': chat.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_chat_new') }}">Create new</a>
+{% endblock %}
+
+</body>
+</html>

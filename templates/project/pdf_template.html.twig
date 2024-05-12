@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project PDF</title>
+</head>
+<body>
+    <h1>{{ project.prname }}</h1>
+    <p>Description: {{ project.description }}</p>
+    <p>Type: {{ project.type }}</p>
+    <p>Start Date: {{ project.stdate|date('Y-m-d') }}</p>
+    <p>End Date: {{ project.enddate|date('Y-m-d') }}</p>
+    <!-- Add more project details as needed -->
+</body>
+</html>

@@ -12,3 +12,22 @@ app_add_sponsor:
   path: /add_sponsor
   controller: 'App\Controller\SponsorController::Addsponsor'
   methods: [GET]
+app_chat_index:
+    path: /chat
+    controller: App\Controller\ChatController::index
+    methods: ['GET']
+
+app_chat_show:
+    path: /chat/{id}
+    controller: App\Controller\ChatController::show
+    methods: ['GET']
+
+app_chat_edit:
+    path: /chat/{id}/edit
+    controller: App\Controller\ChatController::edit
+    methods: ['GET', 'POST']
+
+app_chat_new:
+    path: /chat/new
+    controller: App\Controller\ChatController::new
+    methods: ['GET', 'POST']
