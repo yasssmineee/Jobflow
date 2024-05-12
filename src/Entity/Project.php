@@ -32,8 +32,6 @@ class Project
     #[ORM\ManyToOne(inversedBy: 'projects')]
     private ?Chat $idchat = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'projects')]
-    private ?User $user = null;
     public function getId(): ?int
     {
         return $this->id;
@@ -107,17 +105,6 @@ class Project
     public function setIdchat(?chat $idchat): static
     {
         $this->idchat = $idchat;
-
-        return $this;
-    }
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
 
         return $this;
     }
