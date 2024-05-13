@@ -23,7 +23,7 @@ class SponsorController extends AbstractController
     }
    
 
-    #[Route('/', name: 'app_sponsor')]
+    #[Route('/sponsor', name: 'app_sponsor')]
     public function sponsor(Request $request, SponsorRepository $sponsorRepository): Response
     {
         // Récupérer le terme de recherche de la requête HTTP
